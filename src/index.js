@@ -6,6 +6,10 @@ import reportWebVitals from './reportWebVitals';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from './components/Home';
 import Templates from './components/Templates';
+import BrandKit from './components/BrandKit';
+import PodcastShows from './components/PodcastShows';
+import AllVideos from './components/AllVideos';
+import Video from './components/Video';
 
 const router = createBrowserRouter([
   {
@@ -15,6 +19,22 @@ const router = createBrowserRouter([
   {
     path: '/template',
     element: <Templates />,
+  },
+  {
+    path: '/brandKit',
+    element: <BrandKit />,
+  },
+  {
+    path: '/podcastShows',
+    element: <PodcastShows />,
+  },
+  {
+    path: '/allVideos',
+    element: <AllVideos />,
+  },
+  {
+    path: '/video',
+    element: <Video/>,
   },
 ]);
 

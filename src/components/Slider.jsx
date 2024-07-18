@@ -87,16 +87,16 @@ const Sidebar = ({ isOpen}) => {
         <p>{`>`}</p>
         
       </div>
+      <Link to={'/video'}>
       <button style={styles.newVideoButton}>New Video</button>
+      </Link>
+      
       <nav style={styles.nav}>
-        <a href="#home" style={styles.navItem}>
-          <i className="icon-home" style={styles.iconHome}></i> Home
-        </a>
-        <a href="#templet" style={styles.navItem}>Templet</a>
-        <a href="#all-videos" style={styles.navItem}>All Videos</a>
-        <a href="#podcast" style={styles.navItem}>Podcast & Show</a>
-        <a href="#brand-kit" style={styles.navItem}>Brand Kit</a>
+        <Link to={'/'}>Home</Link>
         <Link to={'/template'}>Template</Link>
+        <Link to={'/allVideos'}>All Videos</Link>
+        <Link to={'/podcastShows'}>Podcast & Shows</Link>
+        <Link to={'/brandKit'}>Brand Kit</Link>
       </nav>
     </div>
   );
