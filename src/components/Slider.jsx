@@ -1,3 +1,4 @@
+import { HomeOutlined } from '@mui/icons-material';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -92,7 +93,11 @@ const Sidebar = ({ isOpen}) => {
       </Link>
       
       <nav style={styles.nav}>
+        <div>
+          <HomeOutlined/>
         <Link to={'/'}>Home</Link>
+        </div>
+        
         <Link to={'/template'}>Template</Link>
         <Link to={'/allVideos'}>All Videos</Link>
         <Link to={'/podcastShows'}>Podcast & Shows</Link>
