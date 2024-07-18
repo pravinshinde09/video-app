@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import Slider1 from "./Slider1";
 
 function Templates() {
   return (
-    <div>Templates</div>
-  )
+    <div style={{ display: "flex" }}>
+      <Slider1 />
+    </div>
+  );
 }
 
-export default Templates
+export default Templates;
