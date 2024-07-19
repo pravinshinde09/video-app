@@ -1,8 +1,15 @@
-import { HomeOutlined } from '@mui/icons-material';
+import { BorderColor, HomeOutlined, Opacity } from '@mui/icons-material';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import BackupTableOutlinedIcon from '@mui/icons-material/BackupTableOutlined';
+import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
+import PodcastsOutlinedIcon from '@mui/icons-material/PodcastsOutlined';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHouse,faFolder, faPodcast} from '@fortawesome/free-solid-svg-icons'
 
-const Sidebar = ({ isOpen}) => {
+
+const Sidebar = ({ isOpen }) => {
   const styles = {
     sidebar: {
       width: isOpen ? '250px' : '0',
@@ -25,20 +32,24 @@ const Sidebar = ({ isOpen}) => {
       display: 'flex',
       alignItems: 'center',
       marginBottom: '20px',
+      
     },
     avatar: {
-      width: '50px',
-      height: '50px',
-      backgroundColor:'green',
+      width: '60px',
+      height: '60px',
+      backgroundColor: '#75ba75',
       borderRadius: '10%',
       marginRight: '10px',
+      borderColor: 'none',
     },
     nameDropdown: {
-      
+      marginBottom: '15px',
     },
     name: {
       // marginBottom: '5px',
-      fontSize: '12px',
+      fontSize: '18px',
+      fontWeight: '500',
+
     },
     dropdown: {
       backgroundColor: '#34495e',
@@ -53,11 +64,49 @@ const Sidebar = ({ isOpen}) => {
       color: 'white',
       fontSize: '16px',
       cursor: 'pointer',
+      borderRadius: '10px',
+      width: '100%'
     },
     nav: {
       display: 'flex',
       flexDirection: 'column',
       width: '100%',
+      padding: '0px',
+      margin: '0px',
+      justifyContent: 'center',
+      alignItems: 'center',
+      fontFamily: 'Trebuchet MS',
+      
+    },
+    logo: {
+      text: 'center',
+      fontSize: '40px',
+      padding: '-10px',
+      fontWeight: '800',
+    },
+    icon: {
+      fontSize: '25px',
+      marginLeft: '-10px',
+      flex: '30%',
+      display: 'grid',
+      placeItems: 'center'
+    },
+    iconname: {
+      textDecoration: 'none',
+      fontSize: '18px',
+      color: 'black',
+      flex: '70%',
+    },
+    row: {
+      width: '100%',
+      height: '50px',
+      margin: 0,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      fontFamily: 'Trebuchet MS',
+      maginTop: '20px',
     },
     navItem: {
       padding: '10px 20px',
@@ -74,37 +123,47 @@ const Sidebar = ({ isOpen}) => {
     },
   };
 
-  return (
-    <div style={styles.sidebar}>
-      <div style={styles.header}>
-        <h1 style={styles.headerText}>Company Name</h1>
-      </div>
-      <div style={styles.profile}>
-        <button style={styles.avatar}>D</button>
-        <div style={styles.nameDropdown}>
-          <p style={styles.name}>User Name</p>
-          <p>Free plan</p>
-        </div>
-        <p>{`>`}</p>
-        
-      </div>
-      <Link to={'/video'}>
-      <button style={styles.newVideoButton}>New Video</button>
-      </Link>
-      
-      <nav style={styles.nav}>
-        <div>
-          <HomeOutlined/>
-        <Link to={'/'}>Home</Link>
-        </div>
-        
-        <Link to={'/template'}>Template</Link>
-        <Link to={'/allVideos'}>All Videos</Link>
-        <Link to={'/podcastShows'}>Podcast & Shows</Link>
-        <Link to={'/brandKit'}>Brand Kit</Link>
-      </nav>
+return (
+  <div style={styles.sidebar}>
+    <div style={styles.header}>
+      <h1 style={styles.logo}>VEED.IO</h1>
     </div>
-  );
+    <div style={styles.profile}>
+      <button style={styles.avatar}>D</button>
+      <div style={styles.nameDropdown}>
+        <p style={styles.name}> Gajanan Bhosale</p>
+      </div>
+
+
+    </div>
+    <Link to={'/video'}>
+      <button style={styles.newVideoButton}>New Video</button>
+    </Link>
+
+    <nav style={styles.nav}>
+
+      <div style={styles.row}>
+        <FontAwesomeIcon icon={faHouse} style={styles.icon} />
+        <Link to={'/'} style={styles.iconname}>Home</Link>
+      </div>
+      <div style={styles.row}>
+        <BackupTableOutlinedIcon style={styles.icon} />
+        <Link to={'/template'} style={styles.iconname}>Template</Link>
+      </div>
+      <div style={styles.row}>
+        <FontAwesomeIcon icon={faFolder} style={styles.icon} />
+        <Link to={'/allVideos'} style={styles.iconname}>All Videos</Link>
+      </div>
+      <div style={styles.row}>
+        <FontAwesomeIcon icon={faPodcast} style={styles.icon} />
+        <Link to={'/podcastShows'} style={styles.iconname}>Podcast & Shows</Link>
+      </div>
+
+
+      <Link to={'/brandKit'}>Brand Kit</Link>
+    </nav>
+  </div>
+);
 };
 
 export default Sidebar;
