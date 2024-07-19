@@ -108,7 +108,7 @@ const styles = {
     padding: "10px",
     border: "1px solid gray",
     backgroundColor: "#f8f8f8",
-    overflowY: "hidden", 
+    overflowY: "hidden",
   },
   button: {
     width: "100%",
@@ -127,7 +127,7 @@ const styles = {
   },
   panel: {
     width: "300px",
-    height: "calc(100vh - 30px)", // Adjust for padding or margin
+    height: "calc(100vh - 30px)",
     padding: "15px",
     backgroundColor: "#fff",
     borderRadius: "5px",

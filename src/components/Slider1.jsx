@@ -10,7 +10,7 @@ const Slider1 = () => {
     if (video) {
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
-      const frameRate = 1; // 1 frame per second
+      const frameRate = 1;
 
       const captureFrame = () => {
         if (video.currentTime >= video.duration) {
