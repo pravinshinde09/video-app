@@ -1,4 +1,4 @@
-import React, { useRef,useState } from "react";
+import React, { useRef, useState } from "react";
 import Sidebar from "./Slider";
 import { Button } from "@mui/material";
 import ReactPlayer from "react-player";
@@ -8,9 +8,11 @@ import PodcastsIcon from '@mui/icons-material/Podcasts';
 import MicNoneIcon from '@mui/icons-material/MicNone';
 import BoltOutlinedIcon from '@mui/icons-material/BoltOutlined';
 
-const Home = () => {
+const Home = ({ mainVideoUrl, frameVideoUrl }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const videoRef = useRef(null);
+
+
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
@@ -65,10 +67,10 @@ const Home = () => {
     },
 
     videoPlayerContainer: {
-      width:'40%',
+      width: '40%',
       padding: "10px",
       borderRadius: "10%",
-      
+
     },
 
     avatar: {
@@ -77,6 +79,32 @@ const Home = () => {
       borderRadius: '50%',
       marginRight: '10px',
     },
+    videocontainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    
+    mainVideo: {
+      width: '80%',
+      height: 'auto',
+      marginBottom: '20px',
+    },
+    
+    frameContainer: {
+      width: '80%',
+      overflowX: 'auto',
+      whiteSpace: 'nowrap',
+      display: 'flex',
+      justifyContent: 'center',
+    },
+    
+    frameVideo: {
+      width: '500%',
+      height: 'auto',
+      display: 'inline-block',
+    }
+    
   };
 
   return (
@@ -96,9 +124,9 @@ const Home = () => {
             />
           </div>
 
-          <div style={{ position: 'absolute', right: '0',top: '0' }}>
-            <button startIcon={<BoltOutlinedIcon/>} style={styles.TopButtonStyle} >Upgrade</button>
-            <button startIcon={<BoltOutlinedIcon/>} style={styles.TopButtonStyle} >Invite</button>
+          <div style={{ position: 'absolute', right: '0', top: '0' }}>
+            <button startIcon={<BoltOutlinedIcon />} style={styles.TopButtonStyle} >Upgrade</button>
+            <button startIcon={<BoltOutlinedIcon />} style={styles.TopButtonStyle} >Invite</button>
             <img src="avatar.jpg" alt="Avatar" style={styles.avatar} />
           </div>
 
@@ -108,27 +136,27 @@ const Home = () => {
         </p>
         <div style={{ display: "flex", padding: "20px", gap: "60px", flexDirection: 'row' }}>
           <div style={styles.buttonStyle}>
-            <Button startIcon={<ContentCutIcon />} style={{color:'purple'}}>
+            <Button startIcon={<ContentCutIcon />} style={{ color: 'purple' }}>
               <p style={{ fontSize: '15px', fontWeight: '10px', color: 'black' }}>Create Project</p>
             </Button>
           </div>
           <div style={styles.buttonStyle}>
-            <Button startIcon={<VideocamIcon />} style={{color:'red'}} >
+            <Button startIcon={<VideocamIcon />} style={{ color: 'red' }} >
               <p style={{ fontSize: '15px', fontWeight: '10px', color: 'black' }}>Record Video</p>
             </Button>
           </div>
           <div style={styles.buttonStyle}>
-            <Button startIcon={<PodcastsIcon />} style={{color:'green'}} >
+            <Button startIcon={<PodcastsIcon />} style={{ color: 'green' }} >
               <p style={{ fontSize: '15px', fontWeight: '10px', color: 'black' }}>Go Live</p>
             </Button>
           </div>
           <div style={styles.buttonStyle}>
-            <Button startIcon={<MicNoneIcon />} style={{color:'yellow'}}>
+            <Button startIcon={<MicNoneIcon />} style={{ color: 'yellow' }}>
               <p style={{ fontSize: '15px', fontWeight: '10px', color: 'black' }}>Record Podcast</p>
             </Button>
           </div>
         </div>
-        <div style={{marginLeft: '10px',fontSize: '25px'}}>
+        <div style={{ marginLeft: '10px', fontSize: '25px' }}>
           <p >My Recent Videos</p>
         </div>
         <div style={styles.videoPlayerContainer}>
@@ -138,6 +166,7 @@ const Home = () => {
             ref={videoRef}
           />
         </div>
+        
       </div>
     </div>
   );

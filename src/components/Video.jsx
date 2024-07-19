@@ -4,6 +4,13 @@ import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import CheckIcon from '@mui/icons-material/Check';
+import { Button } from "@mui/material";
+import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
+import LibraryMusicRoundedIcon from '@mui/icons-material/LibraryMusicRounded';
+import SubtitlesRoundedIcon from '@mui/icons-material/SubtitlesRounded';
+import TextFieldsRoundedIcon from '@mui/icons-material/TextFieldsRounded';
+import FontDownloadRoundedIcon from '@mui/icons-material/FontDownloadRounded';
 
 const Video = () => {
   const [activePanel, setActivePanel] = useState("selling");
@@ -17,24 +24,26 @@ const Video = () => {
     <div style={styles.container}>
       <div style={styles.leftSection}>
         <div style={styles.leftPanel}>
-          <button onClick={() => handleButtonClick("selling")} style={styles.button}>
-            Selling
-          </button>
-          <button onClick={() => handleButtonClick("media")} style={styles.button}>
-            Media
-          </button>
-          <button onClick={() => handleButtonClick("audio")} style={styles.button}>
-            Audio
-          </button>
-          <button onClick={() => handleButtonClick("subtitle")} style={styles.button}>
-            Subtitle
-          </button>
-          <button onClick={() => handleButtonClick("text")} style={styles.button}>
-            Text
-          </button>
-          <button onClick={() => handleButtonClick("element")} style={styles.button}>
-            Element
-          </button>
+          <div style={{ display: "flex", padding: "20px", gap: "10px", flexDirection: 'column' }}>
+            <Button startIcon={<SettingsRoundedIcon />} onClick={() => handleButtonClick("selling")} style={styles.button}>
+              <p style={{marginTop: '8px', marginBottom: '-5px'}}>Selling</p>
+            </Button>
+            <Button startIcon={<AddBoxRoundedIcon />} onClick={() => handleButtonClick("media")} style={styles.button}>
+            <p style={{marginTop: '8px', marginBottom: '-5px'}}>Media</p>
+            </Button>
+            <Button startIcon={<LibraryMusicRoundedIcon />} onClick={() => handleButtonClick("audio")} style={styles.button}>
+            <p style={{marginTop: '8px', marginBottom: '-5px'}}>Audio</p>
+            </Button>
+            <Button startIcon={<SubtitlesRoundedIcon />} onClick={() => handleButtonClick("subtitle")} style={styles.button}>
+            <p style={{marginTop: '8px', marginBottom: '-5px'}}>Subtitle</p>
+            </Button>
+            <Button startIcon={<TextFieldsRoundedIcon />} onClick={() => handleButtonClick("text")} style={styles.button}>
+            <p style={{marginTop: '8px', marginBottom: '-5px'}}>Text</p>
+            </Button>
+            <Button startIcon={<FontDownloadRoundedIcon />} onClick={() => handleButtonClick("element")} style={styles.button}>
+            <p style={{marginTop: '8px', marginBottom: '-5px'}}>Element</p>
+            </Button>
+          </div>
         </div>
         <div style={styles.slider}>
           {activePanel === "selling" && (
@@ -135,7 +144,9 @@ const styles = {
   },
   button: {
     width: "100%",
+    alignItems: 'cnter',
     padding: "10px",
+    flexDirection: 'column',
     margin: "5px 0",
     backgroundColor: "white",
     color: "black",
@@ -150,6 +161,7 @@ const styles = {
     margin: "5px 0",
     backgroundColor: "white",
     color: "black",
+    height: "70%",
     border: "1px solid #ccc",
     borderRadius: "4px",
     cursor: "pointer",
