@@ -1,250 +1,286 @@
-import React, { useRef, useState } from "react";
-import ReactPlayer from "react-player";
-import UndoIcon from '@mui/icons-material/Undo';
-import RedoIcon from '@mui/icons-material/Redo';
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
-import CheckIcon from '@mui/icons-material/Check';
-import { Button } from "@mui/material";
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
-import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
-import LibraryMusicRoundedIcon from '@mui/icons-material/LibraryMusicRounded';
-import SubtitlesRoundedIcon from '@mui/icons-material/SubtitlesRounded';
-import TextFieldsRoundedIcon from '@mui/icons-material/TextFieldsRounded';
-import FontDownloadRoundedIcon from '@mui/icons-material/FontDownloadRounded';
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import React, { useState, useRef, useEffect } from 'react';
 
-const Video = () => {
-  const [activePanel, setActivePanel] = useState("selling");
+const Videos = () => {
+  const [scale, setScale] = useState(100);
+  const [opacity, setOpacity] = useState(100);
+  const [rotation, setRotation] = useState({ x: 0, y: 0, z: 0 });
+  const [position, setPosition] = useState({ x: 0, y: 0, z: 0 });
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [frames, setFrames] = useState([]);
   const videoRef = useRef(null);
+  const canvasRef = useRef(null);
 
-  const handleButtonClick = (panel) => {
-    setActivePanel(panel);
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
+    }
+    return () => {
+      if (videoRef.current) {
+        videoRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      }
+    };
+  }, []);
+
+  const handleLoadedMetadata = () => {
+    setDuration(videoRef.current.duration);
+    generateFrames();
+  };
+
+  const generateFrames = () => {
+    const frameInterval = 1; 
+    const frameCount = Math.floor(videoRef.current.duration / frameInterval);
+    const newFrames = [];
+
+    for (let i = 0; i <= frameCount; i++) {
+      newFrames.push({
+        time: i * frameInterval,
+        image: null, 
+      });
+    }
+
+    setFrames(newFrames);
+    captureAllFrames(newFrames, frameInterval);
+  };
+
+  const captureFrame = (time) => {
+    return new Promise((resolve) => {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      video.currentTime = time;
+
+      const onSeeked = () => {
+        canvas.width = video.videoWidth / 5;
+        canvas.height = video.videoHeight / 5;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataURL = canvas.toDataURL();
+        resolve(dataURL);
+        video.removeEventListener('seeked', onSeeked);
+      };
+
+      video.addEventListener('seeked', onSeeked);
+    });
+  };
+
+  const captureAllFrames = async (frames, frameInterval) => {
+    const updatedFrames = [];
+    for (let frame of frames) {
+      const image = await captureFrame(frame.time);
+      updatedFrames.push({ ...frame, image });
+      // Adding a delay to allow the video element to seek properly
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    setFrames(updatedFrames);
+  };
+
+  const containerStyle = {
+    display: 'grid',
+    gridTemplateAreas: `
+      "assets editor properties"
+      "timeline timeline timeline"
+    `,
+    gridTemplateColumns: '1fr 3fr 1fr',
+    gridTemplateRows: '1fr auto',
+    height: '100vh',
+  };
+
+  const assetsStyle = {
+    gridArea: 'assets',
+    borderRight: '1px solid #ccc',
+    padding: '10px',
+  };
+
+  const assetItemStyle = {
+    background: '#f0f0f0',
+    marginBottom: '10px',
+    padding: '10px',
+    border: '1px solid #ccc',
+    cursor: 'pointer',
+  };
+
+  const editorStyle = {
+    gridArea: 'editor',
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '10px',
+  };
+
+  const toolbarStyle = {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  };
+
+  const previewStyle = {
+    flexGrow: 1,
+    border: '1px solid #ccc',
+    display: 'flex',
+    flexDirection: 'column',
+    marginTop: '10px',
+  };
+
+  const controlsStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '10px',
+    borderBottom: '1px solid #ccc',
+  };
+
+  const videoAreaStyle = {
+    flexGrow: 1,
+    position: 'relative',
+  };
+
+  const videoStyle = {
+    width: '100%',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: '#000',
+    transform: `scale(${scale / 100}) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) rotateZ(${rotation.z}deg)`,
+    opacity: opacity / 100,
+    objectFit: 'cover',
+  };
+
+  const propertiesStyle = {
+    gridArea: 'properties',
+    borderLeft: '1px solid #ccc',
+    padding: '10px',
+  };
+
+  const propertyItemStyle = {
+    marginBottom: '10px',
+  };
+
+  const timelineStyle = {
+    gridArea: 'timeline',
+    borderTop: '1px solid #ccc',
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '10px',
+    position: 'relative',
+  };
+
+  const trackStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: '10px',
+    padding: '10px',
+    border: '1px solid #ccc',
+    overflowX: 'scroll',
+    position: 'relative',
+  };
+
+  const frameStyle = {
+    width: '80px',
+    height: '45px',
+    marginRight: '5px',
+    cursor: 'pointer',
+  };
+
+  const verticalLineStyle = {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    width: '2px',
+    backgroundColor: 'red',
+    left: `${(currentTime / duration) * 100}%`,
+    transform: 'translateX(-50%)',
+  };
+
+  const handlePlayPause = () => {
+    if (videoRef.current.paused) {
+      videoRef.current.play();
+    } else {
+      videoRef.current.pause();
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    setCurrentTime(videoRef.current.currentTime);
+  };
+
+  const handleSeek = (event) => {
+    const newTime = (event.target.value / 100) * duration;
+    videoRef.current.currentTime = newTime;
+  };
+
+  const handleFrameClick = (time) => {
+    videoRef.current.currentTime = time;
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.leftSection}>
-        <div style={styles.leftPanel}>
-          <div style={{ display: "flex", padding: "20px", gap: "10px", flexDirection: 'column' }}>
-            <Button startIcon={<SettingsRoundedIcon />} onClick={() => handleButtonClick("selling")} style={styles.button}>
-              <p style={{ marginTop: '8px', marginBottom: '-5px' }}>Selling</p>
-            </Button>
-            <Button startIcon={<AddBoxRoundedIcon />} onClick={() => handleButtonClick("media")} style={styles.button}>
-              <p style={{ marginTop: '8px', marginBottom: '-5px' }}>Media</p>
-            </Button>
-            <Button startIcon={<LibraryMusicRoundedIcon />} onClick={() => handleButtonClick("audio")} style={styles.button}>
-              <p style={{ marginTop: '8px', marginBottom: '-5px' }}>Audio</p>
-            </Button>
-            <Button startIcon={<SubtitlesRoundedIcon />} onClick={() => handleButtonClick("subtitle")} style={styles.button}>
-              <p style={{ marginTop: '8px', marginBottom: '-5px' }}>Subtitle</p>
-            </Button>
-            <Button startIcon={<TextFieldsRoundedIcon />} onClick={() => handleButtonClick("text")} style={styles.button}>
-              <p style={{ marginTop: '8px', marginBottom: '-5px' }}>Text</p>
-            </Button>
-            <Button startIcon={<FontDownloadRoundedIcon />} onClick={() => handleButtonClick("element")} style={styles.button}>
-              <p style={{ marginTop: '8px', marginBottom: '-5px' }}>Element</p>
-            </Button>
+    <div style={containerStyle}>
+      <div style={assetsStyle}>
+        <p>Assets</p>
+        <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/video.mp4"}>vid-video.mpg</div>
+        <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/walking.mp4"}>walking.mp4</div>
+        <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/happy.mp4"}>happy.mp4</div>
+      </div>
+      <div style={editorStyle}>
+        <div style={toolbarStyle}>
+          <button>Export</button>
+        </div>
+        <div style={previewStyle}>
+          <div style={controlsStyle}>
+            <button onClick={() => videoRef.current.currentTime -= 5}>&lt;&lt;</button>
+            <button onClick={handlePlayPause}>Play/Pause</button>
+            <button onClick={() => videoRef.current.currentTime += 5}>&gt;&gt;</button>
+            <input type="range" value={(currentTime / duration) * 100} onChange={handleSeek} />
+            <span>{`${Math.floor(currentTime / 60)}:${Math.floor(currentTime % 60)}`} / {`${Math.floor(duration / 60)}:${Math.floor(duration % 60)}`}</span>
+          </div>
+          <div style={videoAreaStyle}>
+            <video
+              ref={videoRef}
+              style={videoStyle}
+              onTimeUpdate={handleTimeUpdate}
+              controls={true}
+            >
+              <source src="video/video.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
         </div>
-        <div style={styles.slider}>
-          {activePanel === "selling" && (
-            <div style={styles.panel}>
-              <h2 style={{ margin: "10px 0px" }}>Selling Content</h2>
-              <p style={{ margin: "2px 0px" }}>Size</p>
-              <select style={styles.dropdown}>
-                <option value="" disabled>
-                  Select Size
-                </option>
-                <option value="small">Original (16:9)</option>
-                <option value="medium">Medium</option>
-                <option value="large">Large</option>
-              </select>
-              <p style={{ margin: "4px 0px" }}>Background</p>
-              <div style={styles.backgroundContainer}>
-                <div style={styles.colorRow}>
-                  <p style={{margin:'4px 0px'}}><span style={styles.inlineContent}>
-                    <RadioButtonCheckedIcon style={{ ...styles.icon, paddingRight: '10px', color: 'blue' }} />Color
-                  </span></p>
-
-                  <p style={{margin:'4px 0px'}}>#000000</p>
-                </div>
-                <div style={styles.separator} />
-                <div style={styles.colorRow}>
-                  <p style={{margin:'4px 0px'}}><span style={styles.inlineContent}>
-                    <RadioButtonUncheckedIcon style={{ ...styles.icon, paddingRight: '10px' }} />Image
-                  </span></p>
-
-                  <p style={{margin:'4px 0px'}}>Upload</p>
-                </div>
-              </div>
-              <p>Audio</p>
-              <div style={styles.audioContainer}>
-                <div style={styles.audioContent}>
-                  <p style={{ margin: "2px 0px" }}>Clean Audio</p>
-                  <p style={styles.audioSubtext}>Remove background noise</p>
-                </div>
-              </div>
+      </div>
+      <div style={propertiesStyle}>
+        <div style={propertyItemStyle}>
+          <label>Scale</label>
+          <input type="range" value={scale} onChange={(e) => setScale(e.target.value)} />
+        </div>
+        <div style={propertyItemStyle}>
+          <label>Opacity</label>
+          <input type="range" value={opacity} onChange={(e) => setOpacity(e.target.value)} />
+        </div>
+        <div style={propertyItemStyle}>
+          <label>Rotation</label>
+          <input type="number" value={rotation.x} onChange={(e) => setRotation({ ...rotation, x: e.target.value })} />
+          <input type="number" value={rotation.y} onChange={(e) => setRotation({ ...rotation, y: e.target.value })} />
+          <input type="number" value={rotation.z} onChange={(e) => setRotation({ ...rotation, z: e.target.value })} />
+        </div>
+        <div style={propertyItemStyle}>
+          <label>Position</label>
+          <input type="number" value={position.x} onChange={(e) => setPosition({ ...position, x: e.target.value })} />
+          <input type="number" value={position.y} onChange={(e) => setPosition({ ...position, y: e.target.value })} />
+          <input type="number" value={position.z} onChange={(e) => setPosition({ ...position, z: e.target.value })} />
+        </div>
+      </div>
+      <div style={timelineStyle}>
+        <p>Timeline</p>
+        <div style={trackStyle}>
+          {frames.map((frame, index) => (
+            <div key={index} onClick={() => handleFrameClick(frame.time)}>
+              {frame.image && <img src={frame.image} alt={`Frame at ${frame.time}s`} style={frameStyle} />}
+              <p>{`${Math.floor(frame.time / 60)}:${Math.floor(frame.time % 60)}`}</p>
             </div>
-          )}
-          {activePanel === "media" && <div style={styles.panel}>Media Content</div>}
-          {activePanel === "audio" && <div style={styles.panel}>Audio Content</div>}
-          {activePanel === "subtitle" && <div style={styles.panel}>Subtitle Content</div>}
-          {activePanel === "text" && <div style={styles.panel}>Text Content</div>}
-          {activePanel === "element" && <div style={styles.panel}>Element Content</div>}
+          ))}
+          <div style={verticalLineStyle}></div>
         </div>
       </div>
-      <div style={styles.videoContainer}>
-        <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between' }}>
-          <p>Project Name</p>
-          <div style={{ position: 'absolute', right: '30%', top: '15px' }}>
-            <UndoIcon style={{ color: 'gray', padding: '5px' }} />
-            <RedoIcon style={{ color: 'gray', padding: '5px' }} />
-          </div>
-          <div style={{ border: "1px solid gray", height: '40px', marginRight: '28%', marginTop: '10px' }} />
-          <div style={{ position: 'absolute', right: '0px', display: 'flex' }}>
-            <button style={styles.button1}>
-              <span style={styles.inlineContent}>
-                Invite <PersonAddAltIcon style={styles.icon} />
-              </span>
-            </button>
-            <button style={{ ...styles.button1, backgroundColor: 'blue', color: 'white' }}>
-
-              <span style={styles.inlineContent}>
-                Done <CheckIcon style={{ ...styles.icon, color: 'gray' }} />
-              </span></button>
-          </div>
-        </div>
-        <div style={styles.videoPlayerContainer}>
-          <ReactPlayer
-            url="https://www.w3schools.com/html/mov_bbb.mp4"
-            controls
-            ref={videoRef}
-          />
-        </div>
-      </div>
+      <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
     </div>
   );
 };
 
-const styles = {
-  container: {
-    display: "flex",
-    flexDirection: "row",
-    height: "100vh",
-    width: "100%",
-  },
-  leftSection: {
-    display: "flex",
-    flexDirection: "row",
-    width: "40%",
-    height: "100%",
-  },
-  leftPanel: {
-    width: "100px",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: "10px",
-    border: "1px solid gray",
-    backgroundColor: "#f8f8f8",
-    overflowY: "hidden",
-  },
-  button: {
-    width: "100%",
-    alignItems: 'cnter',
-    padding: "10px",
-    flexDirection: 'column',
-    margin: "5px 0",
-    backgroundColor: "transparent",
-    color: "black",
-    border: "1px solid transparent",
-    borderRadius: "4px",
-    cursor: "pointer",
-    margin: '10px'
-  },
-  button1: {
-    display: 'flex',
-    padding: "10px",
-    margin: "5px 0",
-    backgroundColor: "white",
-    color: "black",
-    height: "70%",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-    cursor: "pointer",
-    margin: '10px',
-    cursor: 'pointer',
-  },
-  inlineContent: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  icon: {
-    marginLeft: '5px',
-    width: '20px',
-    height: '20px',
-  },
-  slider: {
-    flex: 1,
-    height: "100vh",
-    overflow: "auto",
-  },
-  panel: {
-    width: "300px",
-    height: "calc(100vh - 30px)",
-    padding: "15px",
-    backgroundColor: "#fff",
-    borderRadius: "5px",
-    boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-    overflowY: "auto",
-  },
-  dropdown: {
-    padding: "10px",
-    margin: "10px 0",
-    border: "1px solid #ccc",
-    borderRadius: "5px",
-    width: "100%",
-  },
-  backgroundContainer: {
-    border: "1px solid gray",
-    borderRadius: "10px",
-    padding: "10px",
-  },
-  colorRow: {
-    display: "flex",
-    justifyContent: "space-between",
-    marginBottom: "10px",
-  },
-  separator: {
-    border: "1px solid gray",
-    width: "100%",
-    margin: "10px 0",
-  },
-  audioContainer: {
-    border: "1px solid gray",
-    borderRadius: "10px",
-    padding: "10px",
-  },
-  audioContent: {
-    marginLeft: "10px",
-  },
-  audioSubtext: {
-    fontSize: "12px",
-    margin: "2px 0",
-  },
-  videoContainer: {
-    width: "60%",
-    padding: "10px",
-    boxSizing: "border-box",
-  },
-  videoPlayerContainer: {
-    marginTop: '30px',
-    width: "80%",
-    padding: "10px",
-  },
-};
-
-export default Video;
-
-
+export default Videos;

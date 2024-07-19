@@ -1,10 +1,6 @@
-import { BorderColor, HomeOutlined, Opacity } from '@mui/icons-material';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import BackupTableOutlinedIcon from '@mui/icons-material/BackupTableOutlined';
-import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
-import PodcastsOutlinedIcon from '@mui/icons-material/PodcastsOutlined';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHouse,faFolder, faPodcast} from '@fortawesome/free-solid-svg-icons'
 
