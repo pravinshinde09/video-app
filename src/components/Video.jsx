@@ -87,10 +87,9 @@ const Video = () => {
         </div>
       </div>
       <div style={styles.videoContainer}>
-<<<<<<< HEAD
+
         <p style={{fontSize:'20px', fontweight: '60%'}}>Project Name</p>
-=======
-        <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between' }}>
+      
           <p>Project Name</p>
           <div style={{ position: 'absolute', right: '30%', top: '15px' }}>
             <UndoIcon style={{ color: 'gray', padding: '5px' }} />
@@ -110,7 +109,7 @@ const Video = () => {
               </span></button>
           </div>
         </div>
->>>>>>> e3925147d5c2b558ca4d44314ff5a701666f1afb
+        
         <div style={styles.videoPlayerContainer}>
           <ReactPlayer
             url="https://www.w3schools.com/html/mov_bbb.mp4"
@@ -119,8 +118,7 @@ const Video = () => {
           />
         </div>
       </div>
-    </div>
-  );
+  )
 };
 
 const styles = {
@@ -235,12 +233,9 @@ const styles = {
     boxSizing: "border-box",
   },
   videoPlayerContainer: {
-<<<<<<< HEAD
     width: "90%",
-=======
     marginTop: '30px',
     width: "80%",
->>>>>>> e3925147d5c2b558ca4d44314ff5a701666f1afb
     padding: "10px",
   },
 };
