@@ -68,7 +68,6 @@ const Videos = () => {
     for (let frame of frames) {
       const image = await captureFrame(frame.time);
       updatedFrames.push({ ...frame, image });
-      // Adding a delay to allow the video element to seek properly
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
     setFrames(updatedFrames);
