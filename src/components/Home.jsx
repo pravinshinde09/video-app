@@ -74,10 +74,11 @@ const Home = ({ mainVideoUrl, frameVideoUrl }) => {
     },
 
     avatar: {
-      width: '50px',
-      height: '50px',
+      width: '45px',
+      height: '45px',
       borderRadius: '50%',
       marginRight: '10px',
+      paddingTop:'25px'
     },
     videocontainer: {
       display: 'flex',
@@ -124,10 +125,10 @@ const Home = ({ mainVideoUrl, frameVideoUrl }) => {
             />
           </div>
 
-          <div style={{ position: 'absolute', right: '0', top: '0' }}>
+          <div style={{ position: 'absolute', right: '0', top: '0', display:'flex' }}>
             <button startIcon={<BoltOutlinedIcon />} style={styles.TopButtonStyle} >Upgrade</button>
             <button startIcon={<BoltOutlinedIcon />} style={styles.TopButtonStyle} >Invite</button>
-            <img src="avatar.jpg" alt="Avatar" style={styles.avatar} />
+            <img src="images/avatar.png" alt="Avatar" style={styles.avatar} />
           </div>
 
         </div>

@@ -11,6 +11,8 @@ import LibraryMusicRoundedIcon from '@mui/icons-material/LibraryMusicRounded';
 import SubtitlesRoundedIcon from '@mui/icons-material/SubtitlesRounded';
 import TextFieldsRoundedIcon from '@mui/icons-material/TextFieldsRounded';
 import FontDownloadRoundedIcon from '@mui/icons-material/FontDownloadRounded';
+import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 
 const Video = () => {
   const [activePanel, setActivePanel] = useState("selling");
@@ -26,22 +28,22 @@ const Video = () => {
         <div style={styles.leftPanel}>
           <div style={{ display: "flex", padding: "20px", gap: "10px", flexDirection: 'column' }}>
             <Button startIcon={<SettingsRoundedIcon />} onClick={() => handleButtonClick("selling")} style={styles.button}>
-              <p style={{marginTop: '8px', marginBottom: '-5px'}}>Selling</p>
+              <p style={{ marginTop: '8px', marginBottom: '-5px' }}>Selling</p>
             </Button>
             <Button startIcon={<AddBoxRoundedIcon />} onClick={() => handleButtonClick("media")} style={styles.button}>
-            <p style={{marginTop: '8px', marginBottom: '-5px'}}>Media</p>
+              <p style={{ marginTop: '8px', marginBottom: '-5px' }}>Media</p>
             </Button>
             <Button startIcon={<LibraryMusicRoundedIcon />} onClick={() => handleButtonClick("audio")} style={styles.button}>
-            <p style={{marginTop: '8px', marginBottom: '-5px'}}>Audio</p>
+              <p style={{ marginTop: '8px', marginBottom: '-5px' }}>Audio</p>
             </Button>
             <Button startIcon={<SubtitlesRoundedIcon />} onClick={() => handleButtonClick("subtitle")} style={styles.button}>
-            <p style={{marginTop: '8px', marginBottom: '-5px'}}>Subtitle</p>
+              <p style={{ marginTop: '8px', marginBottom: '-5px' }}>Subtitle</p>
             </Button>
             <Button startIcon={<TextFieldsRoundedIcon />} onClick={() => handleButtonClick("text")} style={styles.button}>
-            <p style={{marginTop: '8px', marginBottom: '-5px'}}>Text</p>
+              <p style={{ marginTop: '8px', marginBottom: '-5px' }}>Text</p>
             </Button>
             <Button startIcon={<FontDownloadRoundedIcon />} onClick={() => handleButtonClick("element")} style={styles.button}>
-            <p style={{marginTop: '8px', marginBottom: '-5px'}}>Element</p>
+              <p style={{ marginTop: '8px', marginBottom: '-5px' }}>Element</p>
             </Button>
           </div>
         </div>
@@ -61,13 +63,19 @@ const Video = () => {
               <p style={{ margin: "4px 0px" }}>Background</p>
               <div style={styles.backgroundContainer}>
                 <div style={styles.colorRow}>
-                  <p>Color</p>
-                  <p>#000000</p>
+                  <p style={{margin:'4px 0px'}}><span style={styles.inlineContent}>
+                    <RadioButtonCheckedIcon style={{ ...styles.icon, paddingRight: '10px', color: 'blue' }} />Color
+                  </span></p>
+
+                  <p style={{margin:'4px 0px'}}>#000000</p>
                 </div>
                 <div style={styles.separator} />
                 <div style={styles.colorRow}>
-                  <p>Color</p>
-                  <p>#000000</p>
+                  <p style={{margin:'4px 0px'}}><span style={styles.inlineContent}>
+                    <RadioButtonUncheckedIcon style={{ ...styles.icon, paddingRight: '10px' }} />Image
+                  </span></p>
+
+                  <p style={{margin:'4px 0px'}}>Upload</p>
                 </div>
               </div>
               <p>Audio</p>
@@ -103,7 +111,7 @@ const Video = () => {
             <button style={{ ...styles.button1, backgroundColor: 'blue', color: 'white' }}>
 
               <span style={styles.inlineContent}>
-                Done <CheckIcon style={{...styles.icon, color:'gray'}} />
+                Done <CheckIcon style={{ ...styles.icon, color: 'gray' }} />
               </span></button>
           </div>
         </div>
