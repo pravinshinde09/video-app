@@ -1,5 +1,9 @@
 import React, { useRef, useState } from "react";
 import ReactPlayer from "react-player";
+import UndoIcon from '@mui/icons-material/Undo';
+import RedoIcon from '@mui/icons-material/Redo';
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import CheckIcon from '@mui/icons-material/Check';
 import { Button } from "@mui/material";
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
@@ -83,7 +87,30 @@ const Video = () => {
         </div>
       </div>
       <div style={styles.videoContainer}>
+<<<<<<< HEAD
         <p style={{fontSize:'20px', fontweight: '60%'}}>Project Name</p>
+=======
+        <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between' }}>
+          <p>Project Name</p>
+          <div style={{ position: 'absolute', right: '30%', top: '15px' }}>
+            <UndoIcon style={{ color: 'gray', padding: '5px' }} />
+            <RedoIcon style={{ color: 'gray', padding: '5px' }} />
+          </div>
+          <div style={{ border: "1px solid gray", height: '40px', marginRight: '28%', marginTop: '10px' }} />
+          <div style={{ position: 'absolute', right: '0px', display: 'flex' }}>
+            <button style={styles.button1}>
+              <span style={styles.inlineContent}>
+                Invite <PersonAddAltIcon style={styles.icon} />
+              </span>
+            </button>
+            <button style={{ ...styles.button1, backgroundColor: 'blue', color: 'white' }}>
+
+              <span style={styles.inlineContent}>
+                Done <CheckIcon style={{...styles.icon, color:'gray'}} />
+              </span></button>
+          </div>
+        </div>
+>>>>>>> e3925147d5c2b558ca4d44314ff5a701666f1afb
         <div style={styles.videoPlayerContainer}>
           <ReactPlayer
             url="https://www.w3schools.com/html/mov_bbb.mp4"
@@ -125,12 +152,34 @@ const styles = {
     padding: "10px",
     flexDirection: 'column',
     margin: "5px 0",
+    backgroundColor: "transparent",
+    color: "black",
+    border: "1px solid transparent",
+    borderRadius: "4px",
+    cursor: "pointer",
+    margin: '10px'
+  },
+  button1: {
+    display: 'flex',
+    padding: "10px",
+    margin: "5px 0",
     backgroundColor: "white",
     color: "black",
     height: "70%",
     border: "1px solid #ccc",
     borderRadius: "4px",
     cursor: "pointer",
+    margin: '10px',
+    cursor: 'pointer',
+  },
+  inlineContent: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  icon: {
+    marginLeft: '5px',
+    width: '20px',
+    height: '20px',
   },
   slider: {
     flex: 1,
@@ -182,11 +231,16 @@ const styles = {
   },
   videoContainer: {
     width: "60%",
-    padding: "30px",
+    padding: "10px",
     boxSizing: "border-box",
   },
   videoPlayerContainer: {
+<<<<<<< HEAD
     width: "90%",
+=======
+    marginTop: '30px',
+    width: "80%",
+>>>>>>> e3925147d5c2b558ca4d44314ff5a701666f1afb
     padding: "10px",
   },
 };
