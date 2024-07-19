@@ -83,7 +83,7 @@ const Video = () => {
         </div>
       </div>
       <div style={styles.videoContainer}>
-        <p>Project Name</p>
+        <p style={{fontSize:'20px', fontweight: '60%'}}>Project Name</p>
         <div style={styles.videoPlayerContainer}>
           <ReactPlayer
             url="https://www.w3schools.com/html/mov_bbb.mp4"
@@ -138,7 +138,7 @@ const styles = {
     overflow: "auto",
   },
   panel: {
-    width: "300px",
+    width: "400px",
     height: "calc(100vh - 30px)",
     padding: "15px",
     backgroundColor: "#fff",
@@ -186,7 +186,7 @@ const styles = {
     boxSizing: "border-box",
   },
   videoPlayerContainer: {
-    width: "80%",
+    width: "90%",
     padding: "10px",
   },
 };
