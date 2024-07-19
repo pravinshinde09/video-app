@@ -148,7 +148,7 @@ const styles = {
     padding: "10px",
     flexDirection: 'column',
     margin: "5px 0",
-    backgroundColor: "white",
+    backgroundColor: "transparent",
     color: "black",
     border: "1px solid transparent",
     borderRadius: "4px",
