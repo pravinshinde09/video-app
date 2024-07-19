@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import BackupTableOutlinedIcon from '@mui/icons-material/BackupTableOutlined';
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
-import PodcastsOutlinedIcon from '@mui/icons-material/PodcastsOutlined';
+import DeveloperBoardRoundedIcon from '@mui/icons-material/DeveloperBoardRounded';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHouse,faFolder, faPodcast} from '@fortawesome/free-solid-svg-icons'
 
@@ -39,11 +39,13 @@ const Sidebar = ({ isOpen }) => {
       height: '60px',
       backgroundColor: '#75ba75',
       borderRadius: '10%',
+      marginTop: '-10px',
       marginRight: '10px',
       borderColor: 'none',
     },
     nameDropdown: {
       marginBottom: '15px',
+      marginTop: '-10px',
     },
     name: {
       // marginBottom: '5px',
@@ -65,7 +67,8 @@ const Sidebar = ({ isOpen }) => {
       fontSize: '16px',
       cursor: 'pointer',
       borderRadius: '10px',
-      width: '100%'
+      width: '100%',
+      marginTop: '-5px'
     },
     nav: {
       display: 'flex',
@@ -81,8 +84,9 @@ const Sidebar = ({ isOpen }) => {
     logo: {
       text: 'center',
       fontSize: '40px',
-      padding: '-10px',
+      // padding: '-10px',
       fontWeight: '800',
+      marginTop: '-5px'
     },
     icon: {
       fontSize: '25px',
@@ -100,7 +104,7 @@ const Sidebar = ({ isOpen }) => {
     row: {
       width: '100%',
       height: '50px',
-      margin: 0,
+      margin: '5px',
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'center',
@@ -126,7 +130,7 @@ const Sidebar = ({ isOpen }) => {
 return (
   <div style={styles.sidebar}>
     <div style={styles.header}>
-      <h1 style={styles.logo}>VEED.IO</h1>
+      <h1 style={styles.logo}>EDITO.IO</h1>
     </div>
     <div style={styles.profile}>
       <button style={styles.avatar}>D</button>
@@ -143,7 +147,7 @@ return (
     <nav style={styles.nav}>
 
       <div style={styles.row}>
-        <FontAwesomeIcon icon={faHouse} style={styles.icon} />
+        <HomeOutlinedIcon style={styles.icon} />
         <Link to={'/'} style={styles.iconname}>Home</Link>
       </div>
       <div style={styles.row}>
@@ -151,16 +155,17 @@ return (
         <Link to={'/template'} style={styles.iconname}>Template</Link>
       </div>
       <div style={styles.row}>
-        <FontAwesomeIcon icon={faFolder} style={styles.icon} />
+        <FolderOutlinedIcon style={styles.icon} />
         <Link to={'/allVideos'} style={styles.iconname}>All Videos</Link>
       </div>
       <div style={styles.row}>
         <FontAwesomeIcon icon={faPodcast} style={styles.icon} />
         <Link to={'/podcastShows'} style={styles.iconname}>Podcast & Shows</Link>
       </div>
-
-
-      <Link to={'/brandKit'}>Brand Kit</Link>
+      <div style={styles.row}>
+        <DeveloperBoardRoundedIcon style={styles.icon} />
+        <Link to={'/brandKit'} style={styles.iconname}>Brand Kit</Link>
+      </div>
     </nav>
   </div>
 );

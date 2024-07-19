@@ -27,8 +27,8 @@ const Video = () => {
       <div style={styles.leftSection}>
         <div style={styles.leftPanel}>
           <div style={{ display: "flex", padding: "20px", gap: "10px", flexDirection: 'column' }}>
-            <Button startIcon={<SettingsRoundedIcon />} onClick={() => handleButtonClick("selling")} style={styles.button}>
-              <p style={{ marginTop: '8px', marginBottom: '-5px' }}>Selling</p>
+            <Button startIcon={<SettingsRoundedIcon />} onClick={() => handleButtonClick("setting")} style={styles.button}>
+              <p style={{ marginTop: '8px', marginBottom: '-5px' }}>Setting</p>
             </Button>
             <Button startIcon={<AddBoxRoundedIcon />} onClick={() => handleButtonClick("media")} style={styles.button}>
               <p style={{ marginTop: '8px', marginBottom: '-5px' }}>Media</p>
@@ -191,7 +191,7 @@ const styles = {
     overflow: "auto",
   },
   panel: {
-    width: "300px",
+    width: "400px",
     height: "calc(100vh - 30px)",
     padding: "15px",
     backgroundColor: "#fff",
