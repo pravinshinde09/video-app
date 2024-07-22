@@ -10,56 +10,71 @@ const Videos = () => {
   const [frames, setFrames] = useState([]);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const timelineRef = useRef(null);
+  const pointerRef = useRef(null);
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
+    const video = videoRef.current;
+    if (video) {
+      video.addEventListener('loadedmetadata', handleLoadedMetadata);
+      video.addEventListener('timeupdate', handleTimeUpdate);
     }
     return () => {
-      if (videoRef.current) {
-        videoRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      if (video) {
+        video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+        video.removeEventListener('timeupdate', handleTimeUpdate);
       }
     };
   }, []);
 
   const handleLoadedMetadata = () => {
-    setDuration(videoRef.current.duration);
-    generateFrames();
+    const video = videoRef.current;
+    if (video) {
+      setDuration(video.duration);
+      generateFrames();
+    }
   };
 
   const generateFrames = () => {
-    const frameInterval = 1; 
-    const frameCount = Math.floor(videoRef.current.duration / frameInterval);
-    const newFrames = [];
+    const video = videoRef.current;
+    if (video) {
+      const frameInterval = 1;
+      const frameCount = Math.floor(video.duration / frameInterval);
+      const newFrames = [];
 
-    for (let i = 0; i <= frameCount; i++) {
-      newFrames.push({
-        time: i * frameInterval,
-        image: null, 
-      });
+      for (let i = 0; i <= frameCount; i++) {
+        newFrames.push({
+          time: i * frameInterval,
+          image: null,
+        });
+      }
+
+      setFrames(newFrames);
+      captureAllFrames(newFrames, frameInterval);
     }
-
-    setFrames(newFrames);
-    captureAllFrames(newFrames, frameInterval);
   };
 
   const captureFrame = (time) => {
     return new Promise((resolve) => {
       const video = videoRef.current;
       const canvas = canvasRef.current;
-      video.currentTime = time;
+      if (video && canvas) {
+        video.currentTime = time;
 
-      const onSeeked = () => {
-        canvas.width = video.videoWidth / 5;
-        canvas.height = video.videoHeight / 5;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const dataURL = canvas.toDataURL();
-        resolve(dataURL);
-        video.removeEventListener('seeked', onSeeked);
-      };
+        const onSeeked = () => {
+          canvas.width = video.videoWidth / 5;
+          canvas.height = video.videoHeight / 5;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataURL = canvas.toDataURL();
+            resolve(dataURL);
+            video.removeEventListener('seeked', onSeeked);
+          }
+        };
 
-      video.addEventListener('seeked', onSeeked);
+        video.addEventListener('seeked', onSeeked);
+      }
     });
   };
 
@@ -71,6 +86,86 @@ const Videos = () => {
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
     setFrames(updatedFrames);
+  };
+
+  const handlePlayPause = () => {
+    const video = videoRef.current;
+    if (video) {
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    const video = videoRef.current;
+    if (video) {
+      setCurrentTime(video.currentTime);
+    }
+  };
+
+  const handleSeek = (event) => {
+    const newTime = (event.target.value / 100) * duration;
+    const video = videoRef.current;
+    if (video) {
+      video.currentTime = newTime;
+    }
+  };
+
+  const handleFrameClick = (time) => {
+    const video = videoRef.current;
+    if (video) {
+      video.currentTime = time;
+    }
+  };
+
+  const handleMouseMove = (event) => {
+    if (!timelineRef.current) return;
+
+    const rect = timelineRef.current.getBoundingClientRect();
+    const offsetX = event.clientX - rect.left;
+    const newTime = (offsetX / rect.width) * duration;
+
+    // Update the video playback
+    const video = videoRef.current;
+    if (video) {
+      video.currentTime = newTime;
+    }
+    
+    // Update the vertical line position
+    setCurrentTime(newTime);
+  };
+
+  const handleMouseDown = (event) => {
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
+  const handleMouseUp = () => {
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
+  };
+
+  // Style the vertical line dynamically based on currentTime
+  const verticalLineStyle = {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    width: '2px',
+    backgroundColor: 'red',
+    left: `${(currentTime / duration) * 100}%`,
+    transform: 'translateX(-50%)',
+  };
+
+  const pointerStyle = {
+    position: 'absolute',
+    top: 0,
+    width: '2px',
+    height: '100%',
+    backgroundColor: 'blue',
+    transform: 'translateX(-50%)',
   };
 
   const containerStyle = {
@@ -179,37 +274,6 @@ const Videos = () => {
     cursor: 'pointer',
   };
 
-  const verticalLineStyle = {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    width: '2px',
-    backgroundColor: 'red',
-    left: `${(currentTime / duration) * 100}%`,
-    transform: 'translateX(-50%)',
-  };
-
-  const handlePlayPause = () => {
-    if (videoRef.current.paused) {
-      videoRef.current.play();
-    } else {
-      videoRef.current.pause();
-    }
-  };
-
-  const handleTimeUpdate = () => {
-    setCurrentTime(videoRef.current.currentTime);
-  };
-
-  const handleSeek = (event) => {
-    const newTime = (event.target.value / 100) * duration;
-    videoRef.current.currentTime = newTime;
-  };
-
-  const handleFrameClick = (time) => {
-    videoRef.current.currentTime = time;
-  };
-
   return (
     <div style={containerStyle}>
       <div style={assetsStyle}>
@@ -220,7 +284,7 @@ const Videos = () => {
       </div>
       <div style={editorStyle}>
         <div style={toolbarStyle}>
-          <button>Export</button>
+          <button onClick={handlePlayPause}>Play/Pause</button>
         </div>
         <div style={previewStyle}>
           <div style={controlsStyle}>
@@ -234,7 +298,6 @@ const Videos = () => {
             <video
               ref={videoRef}
               style={videoStyle}
-              onTimeUpdate={handleTimeUpdate}
               controls={true}
             >
               <source src="video/video.mp4" type="video/mp4" />
@@ -265,7 +328,11 @@ const Videos = () => {
           <input type="number" value={position.z} onChange={(e) => setPosition({ ...position, z: e.target.value })} />
         </div>
       </div>
-      <div style={timelineStyle}>
+      <div
+        ref={timelineRef}
+        style={timelineStyle}
+        onMouseDown={handleMouseDown}
+      >
         <p>Timeline</p>
         <div style={trackStyle}>
           {frames.map((frame, index) => (
@@ -274,7 +341,8 @@ const Videos = () => {
               <p>{`${Math.floor(frame.time / 60)}:${Math.floor(frame.time % 60)}`}</p>
             </div>
           ))}
-          <div style={verticalLineStyle}></div>
+          <div className="vertical-line" style={verticalLineStyle}></div>
+          <div className="pointer" ref={pointerRef} style={pointerStyle}></div>
         </div>
       </div>
       <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
