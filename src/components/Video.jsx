@@ -1,4 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
+import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
+import UndoIcon from '@mui/icons-material/Undo';
+import RedoIcon from '@mui/icons-material/Redo';
+import { ContentCut, CopyAll, Save, ZoomIn, ZoomOut } from '@mui/icons-material';
 
 const Videos = () => {
   const [scale, setScale] = useState(100);
@@ -8,6 +15,7 @@ const Videos = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [frames, setFrames] = useState([]);
+  const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -28,14 +36,14 @@ const Videos = () => {
   };
 
   const generateFrames = () => {
-    const frameInterval = 1; 
+    const frameInterval = 1;
     const frameCount = Math.floor(videoRef.current.duration / frameInterval);
     const newFrames = [];
 
     for (let i = 0; i <= frameCount; i++) {
       newFrames.push({
         time: i * frameInterval,
-        image: null, 
+        image: null,
       });
     }
 
@@ -79,7 +87,7 @@ const Videos = () => {
       "assets editor properties"
       "timeline timeline timeline"
     `,
-    gridTemplateColumns: '1fr 3fr 1fr',
+    gridTemplateColumns: '1fr 2fr 1fr',
     gridTemplateRows: '1fr auto',
     height: '100vh',
   };
@@ -91,7 +99,9 @@ const Videos = () => {
   };
 
   const assetItemStyle = {
-    background: '#f0f0f0',
+    width: "100px",
+    height: '100px',
+    background: '#000000',
     marginBottom: '10px',
     padding: '10px',
     border: '1px solid #ccc',
@@ -119,11 +129,12 @@ const Videos = () => {
   };
 
   const controlsStyle = {
+    gap: '10px',
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     padding: '10px',
-    borderBottom: '1px solid #ccc',
+    border: '1px solid #ccc',
   };
 
   const videoAreaStyle = {
@@ -154,11 +165,12 @@ const Videos = () => {
   };
 
   const timelineStyle = {
+    // marginTop:'30px',
     gridArea: 'timeline',
-    borderTop: '1px solid #ccc',
+    border: '1px solid #ccc',
     display: 'flex',
     flexDirection: 'column',
-    padding: '10px',
+    // padding: '10px',
     position: 'relative',
   };
 
@@ -188,12 +200,23 @@ const Videos = () => {
     left: `${(currentTime / duration) * 100}%`,
     transform: 'translateX(-50%)',
   };
+  const VideoButtonStyle = {
+    borderRadius: '100%',
+    padding: "2px 5px",
+    justifyContent: 'center',
+    border: 'none'
+  };
+  const iconStyle = {
+    marginTop: '2px'
+  }
 
   const handlePlayPause = () => {
     if (videoRef.current.paused) {
       videoRef.current.play();
+      setIsPlaying(true);
     } else {
       videoRef.current.pause();
+      setIsPlaying(false)
     }
   };
 
@@ -214,22 +237,23 @@ const Videos = () => {
     <div style={containerStyle}>
       <div style={assetsStyle}>
         <p>Assets</p>
-        <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/video.mp4"}>vid-video.mpg</div>
-        <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/walking.mp4"}>walking.mp4</div>
-        <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/happy.mp4"}>happy.mp4</div>
+        <div style={{ display: 'flex', gap: '20px' }}>
+          <div>
+            <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/video.mp4"} />
+            <p>vid-video.mpg</p>
+          </div>
+          <div>
+            <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/walking.mp4"} />
+            <p>walking.mp4</p>
+          </div>
+          {/* <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/happy.mp4"}>happy.mp4</div> */}
+        </div>
       </div>
       <div style={editorStyle}>
         <div style={toolbarStyle}>
           <button>Export</button>
         </div>
         <div style={previewStyle}>
-          <div style={controlsStyle}>
-            <button onClick={() => videoRef.current.currentTime -= 5}>&lt;&lt;</button>
-            <button onClick={handlePlayPause}>Play/Pause</button>
-            <button onClick={() => videoRef.current.currentTime += 5}>&gt;&gt;</button>
-            <input type="range" value={(currentTime / duration) * 100} onChange={handleSeek} />
-            <span>{`${Math.floor(currentTime / 60)}:${Math.floor(currentTime % 60)}`} / {`${Math.floor(duration / 60)}:${Math.floor(duration % 60)}`}</span>
-          </div>
           <div style={videoAreaStyle}>
             <video
               ref={videoRef}
@@ -265,17 +289,43 @@ const Videos = () => {
           <input type="number" value={position.z} onChange={(e) => setPosition({ ...position, z: e.target.value })} />
         </div>
       </div>
+
       <div style={timelineStyle}>
-        <p>Timeline</p>
-        <div style={trackStyle}>
-          {frames.map((frame, index) => (
-            <div key={index} onClick={() => handleFrameClick(frame.time)}>
-              {frame.image && <img src={frame.image} alt={`Frame at ${frame.time}s`} style={frameStyle} />}
-              <p>{`${Math.floor(frame.time / 60)}:${Math.floor(frame.time % 60)}`}</p>
-            </div>
-          ))}
-          <div style={verticalLineStyle}></div>
+        <div style={controlsStyle}>
+          <button onClick={() => videoRef.current.currentTime -= 5} style={VideoButtonStyle}>
+            <SkipPreviousIcon style={iconStyle} />
+          </button>
+          <button onClick={handlePlayPause} style={VideoButtonStyle}>{
+            isPlaying ? <PauseIcon style={iconStyle} /> : <PlayArrowIcon style={iconStyle} />
+          }</button>
+          <button onClick={() => videoRef.current.currentTime += 5} style={VideoButtonStyle}><SkipNextIcon style={iconStyle} /></button>
+          <input type='range' value={(currentTime / duration) * 100} onChange={handleSeek} />
+          <span>{`${Math.floor(currentTime / 60)}:${Math.floor(currentTime % 60)}`} / {`${Math.floor(duration / 60)}:${Math.floor(duration % 60)}`}</span>
         </div>
+        <div style={{ padding: '10px' }}>
+          <div style={{ display: "flex", gap: "10px", padding: "10px" }}>
+            <UndoIcon />
+            <RedoIcon />
+            <ContentCut />
+            <CopyAll />
+            <Save />
+            <div>
+              <ZoomOut />
+                <input type='range' style={{margin:"0px"}}/>
+              <ZoomIn />
+            </div>
+          </div>
+          <div style={trackStyle}>
+            {frames.map((frame, index) => (
+              <div key={index} onClick={() => handleFrameClick(frame.time)}>
+                {frame.image && <img src={frame.image} alt={`Frame at ${frame.time}s`} style={frameStyle} />}
+                <p>{`${Math.floor(frame.time / 60)}:${Math.floor(frame.time % 60)}`}</p>
+              </div>
+            ))}
+            <div style={verticalLineStyle}></div>
+          </div>
+        </div>
+
       </div>
       <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
     </div>
