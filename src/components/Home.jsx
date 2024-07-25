@@ -18,6 +18,8 @@ const Home = () => {
     setSidebarOpen(!isSidebarOpen);
   };
 
+
+
   const styles = {
     container: {
       display: "flex",
@@ -41,12 +43,12 @@ const Home = () => {
       padding: "10px",
       fontSize: "16px",
       margin: "10px 10px",
-      width: "200%",
+      width: "150%",
       innerHeight: '50%',
       BorderColor: 'none',
       border: '1px',
       boxSizing: "border-box",
-      borderRadius: "10px",
+      borderRadius: "50px",
       boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
       transition: "box-shadow 0.3s ease",
     },
@@ -61,7 +63,7 @@ const Home = () => {
     },
     TopButtonStyle2: {
       border: "1px",
-      marginInline:'10px',
+      marginInline: '10px',
       borderRadius: "10px",
       backgroundColor: 'white',
       color: 'black',
@@ -71,12 +73,12 @@ const Home = () => {
     buttonStyle: {
       border: "1px",
       paddingInline: "20px",
-      width: '30%',
+      width: '15%',
+      height: '15%',
       borderRadius: "10px",
       backgroundColor: 'white',
       boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
       transition: "box-shadow 0.3s ease",
-      fontWeight: 'bold',
     },
 
     videoPlayerContainer: {
@@ -90,7 +92,7 @@ const Home = () => {
       width: '50px',
       height: '50px',
       borderRadius: '50%',
-      marginBottom:'-20px',
+      marginBottom: '-20px',
     },
     videocontainer: {
       display: 'flex',
@@ -118,9 +120,74 @@ const Home = () => {
       width: '500%',
       height: 'auto',
       display: 'inline-block',
-    }
+    },
+    /* RecentVideos.css */
+
+    projects: {
+      display: "flex",
+      flexDirection: "column",
+      gap: '2rem', /* Use rem for spacing consistency */
+    },
+
+    header: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+
+    title: {
+      fontSize: '2rem',
+      fontWeight: '600', /* Semi-bold */
+    },
+
+    viewAll: {
+      fontSize: '1rem',
+      fontWeight: '500', /* Medium */
+      textUnderlineOffset: '2px', /* Better accessibility */
+      cursor: 'pointer',
+    },
+
+    projectGrid: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      gap: '1rem',
+    },
+
+    projectItem: {
+      maxWidth: '100%',
+    },
+
+    projectThumbnail: {
+      width: '20rem',
+      height: '13rem',
+      backgroundColor: 'black',
+      borderRadius: '0.5rem', /* Rounded corners */
+       /* Responsive for small screens */
+    },
+
+    projectName: {
+      fontSize: '1.2rem',
+      fontWeight: '500', /* Medium */
+      paddingTop: '0.5rem', /* Spacing above the text */
+      cursor: 'pointer',
+    },
+
 
   };
+  const ProjectItem = ({ name }) => {
+    return (
+      <div style={styles.projectItem}>
+        <div style={styles.projectThumbnail}></div>
+        <div style={styles.projectName}>{name}</div>
+      </div>
+    );
+  };
+
+  const projects = [
+    'Project Name - 1',
+    'Project Name - 2',
+    'Project Name - 3',
+  ];
 
   return (
     <div style={styles.container}>
@@ -132,7 +199,7 @@ const Home = () => {
         }}>
           <div style={{ display: "flex", gap: "20px" }}>
             <div style={styles.toggleButton} onClick={toggleSidebar}>
-              <h2 style={{margin:"10px 0px"}}>{isSidebarOpen ? ">" : "<"}</h2>
+              <h2 style={{ margin: "10px 0px" }}>{isSidebarOpen ? ">" : "<"}</h2>
             </div>
             <div>
               <input
@@ -153,42 +220,44 @@ const Home = () => {
         <p style={{ fontSize: "24px", marginTop: '40px', marginLeft: '20px' }}>
           Let's Create some <span style={{ fontWeight: "bold" }}>Videos!</span>{" "}
         </p>
-        <div style={{ display: "flex", padding: "20px", gap: "50px", flexDirection: 'row', marginTop: '-15px' }}>
+        <div style={{ display: "flex", padding: "15px", gap: "10px", flexDirection: 'row', marginTop: '-15px' }}>
           <div style={styles.buttonStyle}>
-            <Button startIcon={<ContentCutIcon />} style={{ color: 'purple' }}>
+            <Button startIcon={<ContentCutIcon />} style={{ color: 'black' }}>
               <p style={{ fontSize: '15px', fontWeight: '10px', color: 'black' }}>Create Project</p>
             </Button>
           </div>
           <div style={styles.buttonStyle}>
-            <Button startIcon={<VideocamIcon />} style={{ color: 'red' }} >
+            <Button startIcon={<VideocamIcon />} style={{ color: 'black' }} >
               <p style={{ fontSize: '15px', fontWeight: '10px', color: 'black' }}>Record Video</p>
             </Button>
           </div>
           <div style={styles.buttonStyle}>
-            <Button startIcon={<PodcastsIcon />} style={{ color: 'green' }} >
+            <Button startIcon={<PodcastsIcon />} style={{ color: 'black' }} >
               <p style={{ fontSize: '15px', fontWeight: '10px', color: 'black' }}>Go Live</p>
-            </Button>
-          </div>
-          <div style={styles.buttonStyle}>
-            <Button startIcon={<MicNoneIcon />} style={{ color: 'yellow' }}>
-              <p style={{ fontSize: '15px', fontWeight: '10px', color: 'black' }}>Record Podcast</p>
             </Button>
           </div>
         </div>
         <div style={{ marginLeft: '10px', fontSize: '25px', marginBottom: '-20px' }}>
           <p >My Recent Videos</p>
         </div>
-        <div style={styles.videoPlayerContainer}>
-          <ReactPlayer
-            url="https://www.w3schools.com/html/mov_bbb.mp4"
-            controls
-            ref={videoRef}
-          />
+        <div style={styles.projects}>
+          <div style={styles.header}>
+            <h1 style={styles.title}>Recent Videos</h1>
+            <button style={styles.viewAll}>
+              All Videos &gt;
+            </button>
+          </div>
+          <div style={styles.projectGrid}>
+            {projects.map((project, index) => (
+              <ProjectItem key={index} name={project} />
+            ))}
+          </div>
         </div>
 
       </div>
     </div>
   );
 };
+
 
 export default Home;
