@@ -19,14 +19,17 @@ const Videos = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const timelineRef = useRef(null);
 
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
+      videoRef.current.addEventListener('timeupdate', handleTimeUpdate);
     }
     return () => {
       if (videoRef.current) {
         videoRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
+        videoRef.current.removeEventListener('timeupdate', handleTimeUpdate);
       }
     };
   }, []);
@@ -82,6 +85,56 @@ const Videos = () => {
     setFrames(updatedFrames);
   };
 
+  const handlePlayPause = () => {
+    if (videoRef.current.paused) {
+      videoRef.current.play();
+      setIsPlaying(true);
+    } else {
+      videoRef.current.pause();
+      setIsPlaying(false)
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    setCurrentTime(videoRef.current.currentTime);
+  };
+
+  const handleSeek = (event) => {
+    const newTime = (event.target.value / 100) * duration;
+    videoRef.current.currentTime = newTime;
+  };
+
+  const handleFrameClick = (time) => {
+    videoRef.current.currentTime = time;
+  };
+
+  const handleMouseMove = (event) => {
+    if (!timelineRef.current) return;
+
+    const rect = timelineRef.current.getBoundingClientRect();
+    const offsetX = event.clientX - rect.left;
+    const newTime = (offsetX / rect.width) * duration;
+
+    // Update the video playback
+    const video = videoRef.current;
+    if (video) {
+      video.currentTime = newTime;
+    }
+
+    // Update the vertical line position
+    setCurrentTime(newTime);
+  };
+
+  const handleMouseDown = (event) => {
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
+  const handleMouseUp = () => {
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
+  };
+
   const containerStyle = {
     display: 'grid',
     gridTemplateAreas: `
@@ -101,11 +154,9 @@ const Videos = () => {
   };
 
   const assetItemStyle = {
-    width: "100px",
-    height: '100px',
-    background: '#000000',
-    marginBottom: '10px',
-    padding: '10px',
+    backgroundColor:"black",
+    width:"100%",
+    height:"100%",
     border: '1px solid #ccc',
     cursor: 'pointer',
   };
@@ -165,7 +216,7 @@ const Videos = () => {
     gridArea: 'properties',
     background: '#E9EAEC',
     padding: '10px',
-    paddingLeft:"40px"
+    paddingLeft: "40px"
   };
 
   const propertyItemStyle = {
@@ -174,12 +225,10 @@ const Videos = () => {
   };
 
   const timelineStyle = {
-    // marginTop:'30px',
     gridArea: 'timeline',
     border: '1px solid #ccc',
     display: 'flex',
     flexDirection: 'column',
-    // padding: '10px',
     position: 'relative',
   };
 
@@ -226,34 +275,15 @@ const Videos = () => {
     marginTop: '2px'
   };
   const buttonBarStyle = {
-    position:"absolute",
-    display:"flex",
-    gap:"20px",
-    right:'10px'
+    position: "absolute",
+    display: "flex",
+    gap: "20px",
+    right: '10px'
   }
 
-  const handlePlayPause = () => {
-    if (videoRef.current.paused) {
-      videoRef.current.play();
-      setIsPlaying(true);
-    } else {
-      videoRef.current.pause();
-      setIsPlaying(false)
-    }
-  };
 
-  const handleTimeUpdate = () => {
-    setCurrentTime(videoRef.current.currentTime);
-  };
 
-  const handleSeek = (event) => {
-    const newTime = (event.target.value / 100) * duration;
-    videoRef.current.currentTime = newTime;
-  };
 
-  const handleFrameClick = (time) => {
-    videoRef.current.currentTime = time;
-  };
 
   return (
     <div style={containerStyle}>
@@ -261,11 +291,15 @@ const Videos = () => {
         <p>Assets</p>
         <div style={{ display: 'flex', gap: '20px' }}>
           <div>
-            <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/video.mp4"} />
+            <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/video.mp4"} >
+            {/* <img src='/images/nature.png' alt='' style={{width:'100%'}} /> */}
+            </div>
             <p>vid-video.mpg</p>
           </div>
           <div>
-            <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/walking.mp4"} />
+            <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/walking.mp4"} >
+            {/* <img src='/images/walking.png' alt=''  /> */}
+            </div>
             <p>walking.mp4</p>
           </div>
         </div>
@@ -296,7 +330,7 @@ const Videos = () => {
           <button style={{ border: "none", backgroundColor: "gray", display: "flex" }}><p style={{ color: "white", margin: "5px", paddingTop: "2px" }}>Dashboard</p></button>
           <button style={{ border: "none", backgroundColor: "#ffffff", display: "flex" }}><IosShare /> <p style={{ margin: "5px", paddingTop: "3px" }}>Export</p></button>
         </div>
-        <div style={{...propertyItemStyle, marginTop:"25%"}}>
+        <div style={{ ...propertyItemStyle, marginTop: "25%" }}>
           <label>Scale</label>
           <input type="range" value={scale} onChange={(e) => setScale(e.target.value)} />
           <button style={ButtonStyle}>{scale} %</button>
@@ -345,14 +379,20 @@ const Videos = () => {
               <ZoomIn />
             </div>
           </div>
-          <div style={trackStyle}>
-            {frames.map((frame, index) => (
-              <div key={index} onClick={() => handleFrameClick(frame.time)}>
-                {frame.image && <img src={frame.image} alt={`Frame at ${frame.time}s`} style={frameStyle} />}
-                <p>{`${Math.floor(frame.time / 60)}:${Math.floor(frame.time % 60)}`}</p>
-              </div>
-            ))}
-            <div style={verticalLineStyle}></div>
+          <div
+            ref={timelineRef}
+            style={timelineStyle}
+            onMouseDown={handleMouseDown}
+          >
+            <div style={trackStyle}>
+              {frames.map((frame, index) => (
+                <div key={index} onClick={() => handleFrameClick(frame.time)}>
+                  {frame.image && <img src={frame.image} alt={`Frame at ${frame.time}s`} style={frameStyle} />}
+                  <p>{`${Math.floor(frame.time / 60)}:${Math.floor(frame.time % 60)}`}</p>
+                </div>
+              ))}
+              <div className="vertical-line" style={verticalLineStyle}></div>
+            </div>
           </div>
         </div>
 
