@@ -5,7 +5,8 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
-import { ContentCut, CopyAll, Save, ZoomIn, ZoomOut } from '@mui/icons-material';
+import { AdsClick, ContentCut, CopyAll, Crop, IosShare, Save, ZoomIn, ZoomOut } from '@mui/icons-material';
+import TouchAppOutlinedIcon from '@mui/icons-material/TouchAppOutlined';
 
 const Videos = () => {
   const [scale, setScale] = useState(100);
@@ -96,6 +97,7 @@ const Videos = () => {
     gridArea: 'assets',
     borderRight: '1px solid #ccc',
     padding: '10px',
+    backgroundColor: "#E9EAEC"
   };
 
   const assetItemStyle = {
@@ -113,11 +115,14 @@ const Videos = () => {
     display: 'flex',
     flexDirection: 'column',
     padding: '10px',
+    background: '#E9EAEC',
   };
 
   const toolbarStyle = {
     display: 'flex',
-    justifyContent: 'flex-end',
+    gap: "10px",
+    justifyContent: 'center',
+    marginTop: "20px"
   };
 
   const previewStyle = {
@@ -140,10 +145,12 @@ const Videos = () => {
   const videoAreaStyle = {
     flexGrow: 1,
     position: 'relative',
+    height: "auto"
   };
 
   const videoStyle = {
     width: '100%',
+    height: '100%',
     top: 0,
     left: 0,
     right: 0,
@@ -156,12 +163,14 @@ const Videos = () => {
 
   const propertiesStyle = {
     gridArea: 'properties',
-    borderLeft: '1px solid #ccc',
+    background: '#E9EAEC',
     padding: '10px',
+    paddingLeft:"40px"
   };
 
   const propertyItemStyle = {
     marginBottom: '10px',
+    marginTop: "20px"
   };
 
   const timelineStyle = {
@@ -206,8 +215,21 @@ const Videos = () => {
     justifyContent: 'center',
     border: 'none'
   };
+  const ButtonStyle = {
+    padding: "2px 5px",
+    justifyContent: 'center',
+    border: 'none',
+    backgroundColor: "#ffffff",
+    marginLeft: "20px"
+  };
   const iconStyle = {
     marginTop: '2px'
+  };
+  const buttonBarStyle = {
+    position:"absolute",
+    display:"flex",
+    gap:"20px",
+    right:'10px'
   }
 
   const handlePlayPause = () => {
@@ -246,12 +268,14 @@ const Videos = () => {
             <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/walking.mp4"} />
             <p>walking.mp4</p>
           </div>
-          {/* <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/happy.mp4"}>happy.mp4</div> */}
         </div>
       </div>
       <div style={editorStyle}>
         <div style={toolbarStyle}>
-          <button>Export</button>
+          <AdsClick />
+          <Crop />
+          <TouchAppOutlinedIcon />
+          <button style={{ ...ButtonStyle, marginLeft: '2px' }}>{scale} %</button>
         </div>
         <div style={previewStyle}>
           <div style={videoAreaStyle}>
@@ -268,13 +292,19 @@ const Videos = () => {
         </div>
       </div>
       <div style={propertiesStyle}>
-        <div style={propertyItemStyle}>
+        <div style={buttonBarStyle}>
+          <button style={{ border: "none", backgroundColor: "gray", display: "flex" }}><p style={{ color: "white", margin: "5px", paddingTop: "2px" }}>Dashboard</p></button>
+          <button style={{ border: "none", backgroundColor: "#ffffff", display: "flex" }}><IosShare /> <p style={{ margin: "5px", paddingTop: "3px" }}>Export</p></button>
+        </div>
+        <div style={{...propertyItemStyle, marginTop:"25%"}}>
           <label>Scale</label>
           <input type="range" value={scale} onChange={(e) => setScale(e.target.value)} />
+          <button style={ButtonStyle}>{scale} %</button>
         </div>
         <div style={propertyItemStyle}>
           <label>Opacity</label>
           <input type="range" value={opacity} onChange={(e) => setOpacity(e.target.value)} />
+          <button style={ButtonStyle}>{opacity} %</button>
         </div>
         <div style={propertyItemStyle}>
           <label>Rotation</label>
@@ -311,7 +341,7 @@ const Videos = () => {
             <Save />
             <div>
               <ZoomOut />
-                <input type='range' style={{margin:"0px"}}/>
+              <input type='range' style={{ margin: "0px" }} />
               <ZoomIn />
             </div>
           </div>
