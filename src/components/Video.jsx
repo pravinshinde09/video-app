@@ -308,7 +308,6 @@ const Videos = () => {
     justifyContent: 'center',
     border: 'none',
     backgroundColor: "#ffffff",
-    marginLeft: "20px"
   };
   const iconStyle = {
     marginTop: '2px'
