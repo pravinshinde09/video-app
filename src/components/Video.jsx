@@ -7,6 +7,10 @@ import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
 import { AdsClick, ContentCut, CopyAll, Crop, IosShare, Save, ZoomIn, ZoomOut } from '@mui/icons-material';
 import TouchAppOutlinedIcon from '@mui/icons-material/TouchAppOutlined';
+import { FaPlus } from 'react-icons/fa';
+import { BsGrid3X3 } from 'react-icons/bs';
+import { MdViewList } from 'react-icons/md';
+
 
 const Videos = () => {
   const [scale, setScale] = useState(100);
@@ -150,14 +154,16 @@ const Videos = () => {
     gridArea: 'assets',
     borderRight: '1px solid #ccc',
     padding: '10px',
-    backgroundColor: "#E9EAEC"
+    backgroundColor: "#E9EAEC",
+    marginBottom: '40px',
   };
 
   const assetItemStyle = {
-    backgroundColor:"black",
-    width:"100%",
-    height:"100%",
+    backgroundColor: "black",
+    width: "150px",
+    height: "100px",
     border: '1px solid #ccc',
+    borderRadius: '10px',
     cursor: 'pointer',
   };
 
@@ -175,6 +181,36 @@ const Videos = () => {
     justifyContent: 'center',
     marginTop: "20px"
   };
+
+  const iconBar = {
+    display: 'flex',
+    justifycontent: 'flex-end',
+    padding: '16px',
+    gap: '80px',
+    alignItems: 'center',
+  };
+  
+  const iconButton =  {
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
+  };
+  
+  const iconSet =  {
+    display: 'flex',
+    gap: '12px',
+  };
+  
+  const icon = {
+    fontSize: '1.5rem',
+    cursor: 'pointer',
+    transition: 'color 0.3s',
+  };
+  
+  const iconHover = {
+    color: '#0073e', /* Change this color to your desired hover color */
+  }
+  
 
   const previewStyle = {
     flexGrow: 1,
@@ -221,7 +257,7 @@ const Videos = () => {
 
   const propertyItemStyle = {
     marginBottom: '10px',
-    marginTop: "20px"
+    marginTop: "20px",
   };
 
   const timelineStyle = {
@@ -288,22 +324,32 @@ const Videos = () => {
   return (
     <div style={containerStyle}>
       <div style={assetsStyle}>
-        <p>Assets</p>
+        <p style={{ fontSize: '30px', marginTop: '-5px', fontWeight: '500' }}>Assets</p>
         <div style={{ display: 'flex', gap: '20px' }}>
           <div>
             <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/video.mp4"} >
-            {/* <img src='/images/nature.png' alt='' style={{width:'100%'}} /> */}
+              {/* <img src='/images/nature.png' alt='' style={{width:'100%'}} /> */}
             </div>
             <p>vid-video.mpg</p>
           </div>
           <div>
             <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/walking.mp4"} >
-            {/* <img src='/images/walking.png' alt=''  /> */}
+              {/* <img src='/images/walking.png' alt=''  /> */}
             </div>
             <p>walking.mp4</p>
           </div>
         </div>
+        <div style={iconBar}>
+          <div style={iconButton}>
+            <FaPlus style={icon} />
+          </div>
+          <div style={iconSet}>
+            <BsGrid3X3 style={icon} />
+            <MdViewList style={icon} />
+          </div>
+        </div>
       </div>
+
       <div style={editorStyle}>
         <div style={toolbarStyle}>
           <AdsClick />
@@ -327,24 +373,24 @@ const Videos = () => {
       </div>
       <div style={propertiesStyle}>
         <div style={buttonBarStyle}>
-          <button style={{ border: "none", backgroundColor: "gray", display: "flex" }}><p style={{ color: "white", margin: "5px", paddingTop: "2px" }}>Dashboard</p></button>
-          <button style={{ border: "none", backgroundColor: "#ffffff", display: "flex" }}><IosShare /> <p style={{ margin: "5px", paddingTop: "3px" }}>Export</p></button>
+          <button style={{ border: "none", backgroundColor: "gray", display: "flex", borderRadius: '5px'}}><p style={{ color: "white", margin: "5px", paddingTop: "2px"  }}>Dashboard</p></button>
+          <button style={{ border: "none", backgroundColor: "#ffffff", display: "flex",borderRadius: '5px' }}><IosShare /> <p style={{ margin: "5px", paddingTop: "3px"}}>Export</p></button>
         </div>
         <div style={{ ...propertyItemStyle, marginTop: "25%" }}>
-          <label>Scale</label>
+          <label style={{margin:'18px'}}>Scale</label>
           <input type="range" value={scale} onChange={(e) => setScale(e.target.value)} />
           <button style={ButtonStyle}>{scale} %</button>
         </div>
         <div style={propertyItemStyle}>
-          <label>Opacity</label>
+          <label style={{margin:'10px'}}>Opacity</label>
           <input type="range" value={opacity} onChange={(e) => setOpacity(e.target.value)} />
           <button style={ButtonStyle}>{opacity} %</button>
         </div>
         <div style={propertyItemStyle}>
-          <label>Rotation</label>
-          <input type="number" value={rotation.x} onChange={(e) => setRotation({ ...rotation, x: e.target.value })} />
-          <input type="number" value={rotation.y} onChange={(e) => setRotation({ ...rotation, y: e.target.value })} />
-          <input type="number" value={rotation.z} onChange={(e) => setRotation({ ...rotation, z: e.target.value })} />
+          <label style={{margin: '10px'}}>Rotation</label>
+          <input style={{width:'30px'}} type="number" value={rotation.x} onChange={(e) => setRotation({ ...rotation, x: e.target.value })} />
+          <input style={{width:'30px'}} type="number" value={rotation.y} onChange={(e) => setRotation({ ...rotation, y: e.target.value })} />
+          <input style={{width:'30px'}} type="number" value={rotation.z} onChange={(e) => setRotation({ ...rotation, z: e.target.value })} />
         </div>
         <div style={propertyItemStyle}>
           <label>Position</label>
@@ -363,7 +409,7 @@ const Videos = () => {
             isPlaying ? <PauseIcon style={iconStyle} /> : <PlayArrowIcon style={iconStyle} />
           }</button>
           <button onClick={() => videoRef.current.currentTime += 5} style={VideoButtonStyle}><SkipNextIcon style={iconStyle} /></button>
-          <input type='range' value={(currentTime / duration) * 100} onChange={handleSeek} />
+          <input style={{color:'orange'}} type='range' value={(currentTime / duration) * 100} onChange={handleSeek} />
           <span>{`${Math.floor(currentTime / 60)}:${Math.floor(currentTime % 60)}`} / {`${Math.floor(duration / 60)}:${Math.floor(duration % 60)}`}</span>
         </div>
         <div style={{ padding: '10px' }}>
@@ -388,7 +434,7 @@ const Videos = () => {
               {frames.map((frame, index) => (
                 <div key={index} onClick={() => handleFrameClick(frame.time)}>
                   {frame.image && <img src={frame.image} alt={`Frame at ${frame.time}s`} style={frameStyle} />}
-                  <p>{`${Math.floor(frame.time / 60)}:${Math.floor(frame.time % 60)}`}</p>
+                  <p>{`${Math.floor(frame.time / 20)}:${Math.floor(frame.time % 20)}`}</p>
                 </div>
               ))}
               <div className="vertical-line" style={verticalLineStyle}></div>

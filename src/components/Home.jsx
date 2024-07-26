@@ -23,7 +23,7 @@ const Home = () => {
   const styles = {
     container: {
       display: "flex",
-      backgroundColor: "#f7f7f9",
+      backgroundColor: "#eaeaea",
     },
     mainContent: {
       marginLeft: isSidebarOpen ? "10px" : "0",
