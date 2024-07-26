@@ -223,11 +223,8 @@ const Videos = () => {
   }, []);
 
   const handleLoadedMetadata = () => {
-    const video = videoRef.current;
-    if (video) {
-      setDuration(video.duration);
-      generateFrames();
-    }
+    setDuration(videoRef.current.duration);
+    generateFrames();
   };
 
   const generateFrames = () => {
@@ -241,29 +238,28 @@ const Videos = () => {
         image: null,
       });
     }
+
+    setFrames(newFrames);
+    captureAllFrames(newFrames, frameInterval);
   };
 
   const captureFrame = (time) => {
     return new Promise((resolve) => {
       const video = videoRef.current;
       const canvas = canvasRef.current;
-      if (video && canvas) {
-        video.currentTime = time;
+      video.currentTime = time;
 
-        const onSeeked = () => {
-          canvas.width = video.videoWidth / 5;
-          canvas.height = video.videoHeight / 5;
-          const ctx = canvas.getContext('2d');
-          if (ctx) {
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const dataURL = canvas.toDataURL();
-            resolve(dataURL);
-            video.removeEventListener('seeked', onSeeked);
-          }
-        };
+      const onSeeked = () => {
+        canvas.width = video.videoWidth / 5;
+        canvas.height = video.videoHeight / 5;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataURL = canvas.toDataURL();
+        resolve(dataURL);
+        video.removeEventListener('seeked', onSeeked);
+      };
 
-        video.addEventListener('seeked', onSeeked);
-      }
+      video.addEventListener('seeked', onSeeked);
     });
   };
 
@@ -312,6 +308,7 @@ const Videos = () => {
     if (video) {
       video.currentTime = newTime;
     }
+
     // Update the vertical line position
     setCurrentTime(newTime);
   };
@@ -365,6 +362,7 @@ const Videos = () => {
             <video
               ref={videoRef}
               style={videoStyle}
+              onTimeUpdate={handleTimeUpdate}
               controls={true}
             >
               <source src="video/video.mp4" type="video/mp4" />
