@@ -13,7 +13,7 @@ const Sidebar = ({ isOpen }) => {
     sidebar: {
       width: isOpen ? '250px' : '0',
       height: '100vh',
-      backgroundColor: 'white',
+      backgroundColor: '#f7f7f9',
       color: 'black',
       alignItems: 'center',
       padding: isOpen ? '20px' : '0',
@@ -132,7 +132,7 @@ return (
       <h1 style={styles.logo}>EDITO.IO</h1>
     </div>
     <div style={styles.profile}>
-      <button style={styles.avatar}>D</button>
+      <button style={{...styles.avatar, fontSize:'30px', color:'white', borderColor:'none'}}>G</button>
       <div style={styles.nameDropdown}>
         <p style={styles.name}> Gajanan Bhosale</p>
       </div>

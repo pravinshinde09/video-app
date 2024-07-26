@@ -1,4 +1,200 @@
 import React, { useState, useRef, useEffect } from 'react';
+import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
+import UndoIcon from '@mui/icons-material/Undo';
+import RedoIcon from '@mui/icons-material/Redo';
+import { AdsClick, ContentCut, CopyAll, Crop, IosShare, Save, ZoomIn, ZoomOut } from '@mui/icons-material';
+import TouchAppOutlinedIcon from '@mui/icons-material/TouchAppOutlined';
+import { FaPlus } from 'react-icons/fa';
+import { BsGrid3X3 } from 'react-icons/bs';
+import { MdViewList } from 'react-icons/md';
+import { IoReload } from "react-icons/io5";
+
+const containerStyle = {
+  display: 'grid',
+  gridTemplateAreas: `
+    "assets editor properties"
+    "timeline timeline timeline"
+  `,
+  gridTemplateColumns: '1fr 2fr 1fr',
+  gridTemplateRows: '1fr auto',
+  height: '100vh',
+};
+
+const assetsStyle = {
+  position: "relative",
+  gridArea: 'assets',
+  borderRight: '1px solid #ccc',
+  padding: '10px',
+  backgroundColor: "#E9EAEC",
+};
+
+const assetItemStyle = {
+  width: "150px",
+  height: "100px",
+  backgroundColor: "gray",
+  overflow: "hidden",
+  height: "auto",
+  border: '1px solid #ccc',
+  borderRadius: '10px',
+  cursor: 'pointer',
+};
+
+const editorStyle = {
+  gridArea: 'editor',
+  display: 'flex',
+  flexDirection: 'column',
+  padding: '10px',
+  background: '#E9EAEC',
+};
+
+const toolbarStyle = {
+  display: 'flex',
+  gap: "10px",
+  justifyContent: 'center',
+  marginTop: "20px"
+};
+
+const iconBar = {
+  width: "100%",
+  position: "absolute",
+  alignItems: 'center',
+  bottom: '0px',
+  right: "0px",
+  backgroundColor: "white",
+  alignItems: "end"
+};
+
+const iconSet = {
+  marginLeft: "60%",
+  padding: "10px",
+  display: 'flex',
+  gap: '15px',
+  backgroundColor: "white"
+};
+
+const icon = {
+  fontSize: '1.5rem',
+  cursor: 'pointer',
+  transition: 'color 0.3s',
+};
+
+const iconHover = {
+  color: '#0073e', /* Change this color to your desired hover color */
+}
+
+
+const previewStyle = {
+  flexGrow: 1,
+  border: '1px solid #ccc',
+  display: 'flex',
+  flexDirection: 'column',
+  marginTop: '10px',
+};
+
+const controlsStyle = {
+  gap: '10px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: '10px',
+  border: '1px solid #ccc',
+};
+
+const videoAreaStyle = {
+  flexGrow: 1,
+  position: 'relative',
+  height: "auto"
+};
+
+const videoStyle = {
+  width: '100%',
+  height: '100%',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  background: '#000',
+  transform: `scale(${scale / 100}) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) rotateZ(${rotation.z}deg)`,
+  opacity: opacity / 100,
+  objectFit: 'cover',
+};
+
+const propertiesStyle = {
+  gridArea: 'properties',
+  background: '#E9EAEC',
+  padding: '10px',
+  paddingLeft: "20px"
+};
+
+const propertyItemStyle = {
+  display: "flex",
+  justifyContent: "space-between",
+  padding: "10px"
+};
+
+const timelineStyle = {
+  gridArea: 'timeline',
+  border: '1px solid #ccc',
+  display: 'flex',
+  flexDirection: 'column',
+  position: 'relative',
+};
+
+const trackStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  marginBottom: '10px',
+  padding: '10px',
+  border: '1px solid #ccc',
+  overflowX: 'scroll',
+  position: 'relative',
+};
+
+const frameStyle = {
+  width: '80px',
+  height: '45px',
+  marginRight: '5px',
+  cursor: 'pointer',
+};
+
+const verticalLineStyle = {
+  position: 'absolute',
+  top: 0,
+  bottom: 0,
+  width: '2px',
+  backgroundColor: 'red',
+  left: `${(currentTime / duration) * 100}%`,
+  transform: 'translateX(-50%)',
+};
+const VideoButtonStyle = {
+  borderRadius: '100%',
+  padding: "2px 5px",
+  justifyContent: 'center',
+  border: 'none'
+};
+const ButtonStyle = {
+  padding: "2px 5px",
+  justifyContent: 'center',
+  border: 'none',
+  backgroundColor: "#ffffff",
+};
+const iconStyle = {
+  marginTop: '2px'
+};
+const buttonBarStyle = {
+  position: "absolute",
+  display: "flex",
+  gap: "20px",
+  right: '10px'
+};
+const inputStyle = {
+  width: '30px',
+  margin: "5px"
+}
+
 
 const Videos = () => {
   const [scale, setScale] = useState(100);
@@ -8,21 +204,20 @@ const Videos = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [frames, setFrames] = useState([]);
+  const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const timelineRef = useRef(null);
-  const pointerRef = useRef(null);
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (video) {
-      video.addEventListener('loadedmetadata', handleLoadedMetadata);
-      video.addEventListener('timeupdate', handleTimeUpdate);
+    if (videoRef.current) {
+      videoRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
+      videoRef.current.addEventListener('timeupdate', handleTimeUpdate);
     }
     return () => {
-      if (video) {
-        video.removeEventListener('loadedmetadata', handleLoadedMetadata);
-        video.removeEventListener('timeupdate', handleTimeUpdate);
+      if (videoRef.current) {
+        videoRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
+        videoRef.current.removeEventListener('timeupdate', handleTimeUpdate);
       }
     };
   }, []);
@@ -36,21 +231,15 @@ const Videos = () => {
   };
 
   const generateFrames = () => {
-    const video = videoRef.current;
-    if (video) {
-      const frameInterval = 1;
-      const frameCount = Math.floor(video.duration / frameInterval);
-      const newFrames = [];
+    const frameInterval = 1;
+    const frameCount = Math.floor(videoRef.current.duration / frameInterval);
+    const newFrames = [];
 
-      for (let i = 0; i <= frameCount; i++) {
-        newFrames.push({
-          time: i * frameInterval,
-          image: null,
-        });
-      }
-
-      setFrames(newFrames);
-      captureAllFrames(newFrames, frameInterval);
+    for (let i = 0; i <= frameCount; i++) {
+      newFrames.push({
+        time: i * frameInterval,
+        image: null,
+      });
     }
   };
 
@@ -89,36 +278,26 @@ const Videos = () => {
   };
 
   const handlePlayPause = () => {
-    const video = videoRef.current;
-    if (video) {
-      if (video.paused) {
-        video.play();
-      } else {
-        video.pause();
-      }
+    if (videoRef.current.paused) {
+      videoRef.current.play();
+      setIsPlaying(true);
+    } else {
+      videoRef.current.pause();
+      setIsPlaying(false)
     }
   };
 
   const handleTimeUpdate = () => {
-    const video = videoRef.current;
-    if (video) {
-      setCurrentTime(video.currentTime);
-    }
+    setCurrentTime(videoRef.current.currentTime);
   };
 
   const handleSeek = (event) => {
     const newTime = (event.target.value / 100) * duration;
-    const video = videoRef.current;
-    if (video) {
-      video.currentTime = newTime;
-    }
+    videoRef.current.currentTime = newTime;
   };
 
   const handleFrameClick = (time) => {
-    const video = videoRef.current;
-    if (video) {
-      video.currentTime = time;
-    }
+    videoRef.current.currentTime = time;
   };
 
   const handleMouseMove = (event) => {
@@ -133,7 +312,6 @@ const Videos = () => {
     if (video) {
       video.currentTime = newTime;
     }
-    
     // Update the vertical line position
     setCurrentTime(newTime);
   };
@@ -148,152 +326,41 @@ const Videos = () => {
     document.removeEventListener('mouseup', handleMouseUp);
   };
 
-  // Style the vertical line dynamically based on currentTime
-  const verticalLineStyle = {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    width: '2px',
-    backgroundColor: 'red',
-    left: `${(currentTime / duration) * 100}%`,
-    transform: 'translateX(-50%)',
-  };
-
-  const pointerStyle = {
-    position: 'absolute',
-    top: 0,
-    width: '2px',
-    height: '100%',
-    backgroundColor: 'blue',
-    transform: 'translateX(-50%)',
-  };
-
-  const containerStyle = {
-    display: 'grid',
-    gridTemplateAreas: `
-      "assets editor properties"
-      "timeline timeline timeline"
-    `,
-    gridTemplateColumns: '1fr 3fr 1fr',
-    gridTemplateRows: '1fr auto',
-    height: '100vh',
-  };
-
-  const assetsStyle = {
-    gridArea: 'assets',
-    borderRight: '1px solid #ccc',
-    padding: '10px',
-  };
-
-  const assetItemStyle = {
-    background: '#f0f0f0',
-    marginBottom: '10px',
-    padding: '10px',
-    border: '1px solid #ccc',
-    cursor: 'pointer',
-  };
-
-  const editorStyle = {
-    gridArea: 'editor',
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '10px',
-  };
-
-  const toolbarStyle = {
-    display: 'flex',
-    justifyContent: 'flex-end',
-  };
-
-  const previewStyle = {
-    flexGrow: 1,
-    border: '1px solid #ccc',
-    display: 'flex',
-    flexDirection: 'column',
-    marginTop: '10px',
-  };
-
-  const controlsStyle = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '10px',
-    borderBottom: '1px solid #ccc',
-  };
-
-  const videoAreaStyle = {
-    flexGrow: 1,
-    position: 'relative',
-  };
-
-  const videoStyle = {
-    width: '100%',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: '#000',
-    transform: `scale(${scale / 100}) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) rotateZ(${rotation.z}deg)`,
-    opacity: opacity / 100,
-    objectFit: 'cover',
-  };
-
-  const propertiesStyle = {
-    gridArea: 'properties',
-    borderLeft: '1px solid #ccc',
-    padding: '10px',
-  };
-
-  const propertyItemStyle = {
-    marginBottom: '10px',
-  };
-
-  const timelineStyle = {
-    gridArea: 'timeline',
-    borderTop: '1px solid #ccc',
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '10px',
-    position: 'relative',
-  };
-
-  const trackStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: '10px',
-    padding: '10px',
-    border: '1px solid #ccc',
-    overflowX: 'scroll',
-    position: 'relative',
-  };
-
-  const frameStyle = {
-    width: '80px',
-    height: '45px',
-    marginRight: '5px',
-    cursor: 'pointer',
-  };
-
   return (
     <div style={containerStyle}>
       <div style={assetsStyle}>
-        <p>Assets</p>
-        <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/video.mp4"}>vid-video.mpg</div>
-        <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/walking.mp4"}>walking.mp4</div>
-        <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/happy.mp4"}>happy.mp4</div>
+        <p style={{ fontSize: '30px', marginTop: '-5px', fontWeight: '500' }}>Assets</p>
+        <div style={{ display: 'flex', gap: '20px' }}>
+          <div>
+            <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/video.mp4"} >
+              <img src='/images/nature.png' alt='' style={{ width: '100%', height: "110%" }} />
+            </div>
+            <p>vid-video.mpg</p>
+          </div>
+          <div>
+            <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/walking.mp4"} >
+              <img src='/images/walking.png' alt='' style={{ width: '100%' }} />
+            </div>
+            <p>walking.mp4</p>
+          </div>
+        </div>
+        <div style={iconBar}>
+          <div style={iconSet}>
+            <FaPlus style={{ ...icon, marginRight: "20px" }} />
+            <BsGrid3X3 style={icon} />
+            <MdViewList style={icon} />
+          </div>
+        </div>
       </div>
+
       <div style={editorStyle}>
         <div style={toolbarStyle}>
-          <button onClick={handlePlayPause}>Play/Pause</button>
+          <AdsClick />
+          <Crop />
+          <TouchAppOutlinedIcon />
+          <button style={{ ...ButtonStyle, marginLeft: '2px' }}>{scale} %</button>
         </div>
         <div style={previewStyle}>
-          <div style={controlsStyle}>
-            <button onClick={() => videoRef.current.currentTime -= 5}>&lt;&lt;</button>
-            <button onClick={handlePlayPause}>Play/Pause</button>
-            <button onClick={() => videoRef.current.currentTime += 5}>&gt;&gt;</button>
-            <input type="range" value={(currentTime / duration) * 100} onChange={handleSeek} />
-            <span>{`${Math.floor(currentTime / 60)}:${Math.floor(currentTime % 60)}`} / {`${Math.floor(duration / 60)}:${Math.floor(duration % 60)}`}</span>
-          </div>
           <div style={videoAreaStyle}>
             <video
               ref={videoRef}
@@ -307,43 +374,110 @@ const Videos = () => {
         </div>
       </div>
       <div style={propertiesStyle}>
-        <div style={propertyItemStyle}>
-          <label>Scale</label>
-          <input type="range" value={scale} onChange={(e) => setScale(e.target.value)} />
+        <div style={buttonBarStyle}>
+          <button style={{ border: "none", backgroundColor: "gray", display: "flex", borderRadius: '5px' }}><p style={{ color: "white", margin: "5px", paddingTop: "2px" }}>Dashboard</p></button>
+          <button style={{ border: "none", backgroundColor: "#ffffff", display: "flex", borderRadius: '5px' }}><IosShare /> <p style={{ margin: "5px", paddingTop: "3px" }}>Export</p></button>
         </div>
-        <div style={propertyItemStyle}>
-          <label>Opacity</label>
-          <input type="range" value={opacity} onChange={(e) => setOpacity(e.target.value)} />
-        </div>
-        <div style={propertyItemStyle}>
-          <label>Rotation</label>
-          <input type="number" value={rotation.x} onChange={(e) => setRotation({ ...rotation, x: e.target.value })} />
-          <input type="number" value={rotation.y} onChange={(e) => setRotation({ ...rotation, y: e.target.value })} />
-          <input type="number" value={rotation.z} onChange={(e) => setRotation({ ...rotation, z: e.target.value })} />
-        </div>
-        <div style={propertyItemStyle}>
-          <label>Position</label>
-          <input type="number" value={position.x} onChange={(e) => setPosition({ ...position, x: e.target.value })} />
-          <input type="number" value={position.y} onChange={(e) => setPosition({ ...position, y: e.target.value })} />
-          <input type="number" value={position.z} onChange={(e) => setPosition({ ...position, z: e.target.value })} />
+        <div style={{ marginTop: "20%" }}>
+          <div style={propertyItemStyle}>
+            <div style={{ display: "flex" }}>
+              <label>Scale:</label>
+              <input type="range" value={scale} onChange={(e) => setScale(e.target.value)} />
+            </div>
+            <button style={ButtonStyle}>{scale} %</button>
+          </div>
+          <div style={propertyItemStyle}>
+            <div style={{ display: "flex" }}>
+              <label>Opacity:</label>
+              <input type="range" value={opacity} onChange={(e) => setOpacity(e.target.value)} />
+            </div>
+            <button style={ButtonStyle}>{opacity} %</button>
+          </div>
+          <div style={propertyItemStyle}>
+            <p style={{ paddingRight: "10px" }}>Rotation:</p>
+            <div style={{ display: "grid" }}>
+              <div>
+                <IoReload style={{ marginRight: "20px" }} />
+                <label>X</label>
+                <input style={inputStyle} type="number" value={rotation.x} onChange={(e) => setRotation({ ...rotation, x: e.target.value })} />
+              </div>
+              <div>
+                <IoReload style={{ marginRight: "20px" }} />
+                <label>Y</label>
+                <input style={inputStyle} type="number" value={rotation.y} onChange={(e) => setRotation({ ...rotation, y: e.target.value })} />
+              </div>
+              <div>
+                <IoReload style={{ marginRight: "20px" }} />
+                <label>Z</label>
+                <input style={inputStyle} type="number" value={rotation.z} onChange={(e) => setRotation({ ...rotation, z: e.target.value })} />
+              </div>
+            </div>
+          </div>
+          <div style={propertyItemStyle}>
+            <p style={{ paddingRight: "10px" }}>Position:</p>
+            <div style={{ display: "grid" }}>
+              <div>
+                <IoReload style={{ marginRight: "20px" }} />
+                <label>X</label>
+                <input style={inputStyle} type="number" value={position.x} onChange={(e) => setPosition({ ...position, x: e.target.value })} />
+              </div>
+              <div>
+                <IoReload style={{ marginRight: "20px" }} />
+                <label>Y</label>
+                <input style={inputStyle} type="number" value={position.y} onChange={(e) => setPosition({ ...position, y: e.target.value })} />
+              </div>
+              <div>
+                <IoReload style={{ marginRight: "20px" }} />
+                <label>Z</label>
+                <input style={inputStyle} type="number" value={position.z} onChange={(e) => setPosition({ ...position, z: e.target.value })} />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div
-        ref={timelineRef}
-        style={timelineStyle}
-        onMouseDown={handleMouseDown}
-      >
-        <p>Timeline</p>
-        <div style={trackStyle}>
-          {frames.map((frame, index) => (
-            <div key={index} onClick={() => handleFrameClick(frame.time)}>
-              {frame.image && <img src={frame.image} alt={`Frame at ${frame.time}s`} style={frameStyle} />}
-              <p>{`${Math.floor(frame.time / 60)}:${Math.floor(frame.time % 60)}`}</p>
-            </div>
-          ))}
-          <div className="vertical-line" style={verticalLineStyle}></div>
-          <div className="pointer" ref={pointerRef} style={pointerStyle}></div>
+
+      <div style={timelineStyle}>
+        <div style={controlsStyle}>
+          <button onClick={() => videoRef.current.currentTime -= 5} style={VideoButtonStyle}>
+            <SkipPreviousIcon style={iconStyle} />
+          </button>
+          <button onClick={handlePlayPause} style={VideoButtonStyle}>{
+            isPlaying ? <PauseIcon style={iconStyle} /> : <PlayArrowIcon style={iconStyle} />
+          }</button>
+          <button onClick={() => videoRef.current.currentTime += 5} style={VideoButtonStyle}><SkipNextIcon style={iconStyle} /></button>
+          <input style={{ color: 'orange' }} type='range' value={(currentTime / duration) * 100} onChange={handleSeek} />
+          <span>{`${Math.floor(currentTime / 60)}:${Math.floor(currentTime % 60)}`} / {`${Math.floor(duration / 60)}:${Math.floor(duration % 60)}`}</span>
         </div>
+        <div style={{ padding: '10px' }}>
+          <div style={{ display: "flex", gap: "10px", padding: "10px" }}>
+            <UndoIcon />
+            <RedoIcon />
+            <ContentCut />
+            <CopyAll />
+            <Save />
+            <div>
+              <ZoomOut />
+              <input type='range' style={{ margin: "0px" }} />
+              <ZoomIn />
+            </div>
+          </div>
+          <div
+            ref={timelineRef}
+            style={timelineStyle}
+            onMouseDown={handleMouseDown}
+          >
+            <div style={trackStyle}>
+              {frames.map((frame, index) => (
+                <div key={index} onClick={() => handleFrameClick(frame.time)}>
+                  {frame.image && <img src={frame.image} alt={`Frame at ${frame.time}s`} style={frameStyle} />}
+                  <p>{`${Math.floor(frame.time / 20)}:${Math.floor(frame.time % 20)}`}</p>
+                </div>
+              ))}
+              <div className="vertical-line" style={verticalLineStyle}></div>
+            </div>
+          </div>
+        </div>
+
       </div>
       <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
     </div>
