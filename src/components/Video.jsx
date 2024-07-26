@@ -151,11 +151,11 @@ const Videos = () => {
   };
 
   const assetsStyle = {
+    position:"relative",
     gridArea: 'assets',
     borderRight: '1px solid #ccc',
     padding: '10px',
     backgroundColor: "#E9EAEC",
-    marginBottom: '40px',
   };
 
   const assetItemStyle = {
@@ -183,22 +183,21 @@ const Videos = () => {
   };
 
   const iconBar = {
-    display: 'flex',
-    justifycontent: 'flex-end',
-    padding: '16px',
-    gap: '80px',
+    width:"100%",
+    position:"absolute",
     alignItems: 'center',
-  };
-  
-  const iconButton =  {
-    display: 'flex',
-    alignItems: 'center',
-    cursor: 'pointer',
+    bottom:'0px',
+    right:"0px",
+    backgroundColor:"white",
+    alignItems:"end"
   };
   
   const iconSet =  {
+    marginLeft:"60%",
+    padding:"10px",
     display: 'flex',
-    gap: '12px',
+    gap: '15px',
+    backgroundColor:"white"
   };
   
   const icon = {
@@ -252,7 +251,7 @@ const Videos = () => {
     gridArea: 'properties',
     background: '#E9EAEC',
     padding: '10px',
-    paddingLeft: "40px"
+    paddingLeft: "20px"
   };
 
   const propertyItemStyle = {
@@ -340,10 +339,8 @@ const Videos = () => {
           </div>
         </div>
         <div style={iconBar}>
-          <div style={iconButton}>
-            <FaPlus style={icon} />
-          </div>
           <div style={iconSet}>
+              <FaPlus style={{...icon, marginRight:"20px"}} /> 
             <BsGrid3X3 style={icon} />
             <MdViewList style={icon} />
           </div>
@@ -377,23 +374,23 @@ const Videos = () => {
           <button style={{ border: "none", backgroundColor: "#ffffff", display: "flex",borderRadius: '5px' }}><IosShare /> <p style={{ margin: "5px", paddingTop: "3px"}}>Export</p></button>
         </div>
         <div style={{ ...propertyItemStyle, marginTop: "25%" }}>
-          <label style={{margin:'18px'}}>Scale</label>
+          <label>Scale</label>
           <input type="range" value={scale} onChange={(e) => setScale(e.target.value)} />
-          <button style={ButtonStyle}>{scale} %</button>
+          <button style={{...ButtonStyle, marginLeft:"40px"}}>{scale} %</button>
         </div>
         <div style={propertyItemStyle}>
-          <label style={{margin:'10px'}}>Opacity</label>
+          <label >Opacity</label>
           <input type="range" value={opacity} onChange={(e) => setOpacity(e.target.value)} />
           <button style={ButtonStyle}>{opacity} %</button>
         </div>
         <div style={propertyItemStyle}>
-          <label style={{margin: '10px'}}>Rotation</label>
+          <label style={{paddingRight:"10px"}}>Rotation</label>
           <input style={{width:'30px'}} type="number" value={rotation.x} onChange={(e) => setRotation({ ...rotation, x: e.target.value })} />
           <input style={{width:'30px'}} type="number" value={rotation.y} onChange={(e) => setRotation({ ...rotation, y: e.target.value })} />
           <input style={{width:'30px'}} type="number" value={rotation.z} onChange={(e) => setRotation({ ...rotation, z: e.target.value })} />
         </div>
         <div style={propertyItemStyle}>
-          <label>Position</label>
+          <label style={{paddingRight:"10px"}}>Position</label>
           <input type="number" value={position.x} onChange={(e) => setPosition({ ...position, x: e.target.value })} />
           <input type="number" value={position.y} onChange={(e) => setPosition({ ...position, y: e.target.value })} />
           <input type="number" value={position.z} onChange={(e) => setPosition({ ...position, z: e.target.value })} />
