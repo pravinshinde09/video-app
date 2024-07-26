@@ -18,7 +18,7 @@ const SeekBar = () => {
 
   const seekBarStyle = {
     width: '100%',
-    height: '4px',
+    height: '15px',
     appearance: 'none',
     outline: 'none',
     background: `linear-gradient(
