@@ -11,189 +11,7 @@ import { FaPlus } from 'react-icons/fa';
 import { BsGrid3X3 } from 'react-icons/bs';
 import { MdViewList } from 'react-icons/md';
 import { IoReload } from "react-icons/io5";
-
-const containerStyle = {
-  display: 'grid',
-  gridTemplateAreas: `
-    "assets editor properties"
-    "timeline timeline timeline"
-  `,
-  gridTemplateColumns: '1fr 2fr 1fr',
-  gridTemplateRows: '1fr auto',
-  height: '100vh',
-};
-
-const assetsStyle = {
-  position: "relative",
-  gridArea: 'assets',
-  borderRight: '1px solid #ccc',
-  padding: '10px',
-  backgroundColor: "#E9EAEC",
-};
-
-const assetItemStyle = {
-  width: "150px",
-  height: "100px",
-  backgroundColor: "gray",
-  overflow: "hidden",
-  height: "auto",
-  border: '1px solid #ccc',
-  borderRadius: '10px',
-  cursor: 'pointer',
-};
-
-const editorStyle = {
-  gridArea: 'editor',
-  display: 'flex',
-  flexDirection: 'column',
-  padding: '10px',
-  background: '#E9EAEC',
-};
-
-const toolbarStyle = {
-  display: 'flex',
-  gap: "10px",
-  justifyContent: 'center',
-  marginTop: "20px"
-};
-
-const iconBar = {
-  width: "100%",
-  position: "absolute",
-  alignItems: 'center',
-  bottom: '0px',
-  right: "0px",
-  backgroundColor: "white",
-  alignItems: "end"
-};
-
-const iconSet = {
-  marginLeft: "60%",
-  padding: "10px",
-  display: 'flex',
-  gap: '15px',
-  backgroundColor: "white"
-};
-
-const icon = {
-  fontSize: '1.5rem',
-  cursor: 'pointer',
-  transition: 'color 0.3s',
-};
-
-const iconHover = {
-  color: '#0073e', /* Change this color to your desired hover color */
-}
-
-
-const previewStyle = {
-  flexGrow: 1,
-  border: '1px solid #ccc',
-  display: 'flex',
-  flexDirection: 'column',
-  marginTop: '10px',
-};
-
-const controlsStyle = {
-  gap: '10px',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  padding: '10px',
-  border: '1px solid #ccc',
-};
-
-const videoAreaStyle = {
-  flexGrow: 1,
-  position: 'relative',
-  height: "auto"
-};
-
-const videoStyle = {
-  width: '100%',
-  height: '100%',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  background: '#000',
-  transform: `scale(${scale / 100}) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) rotateZ(${rotation.z}deg)`,
-  opacity: opacity / 100,
-  objectFit: 'cover',
-};
-
-const propertiesStyle = {
-  gridArea: 'properties',
-  background: '#E9EAEC',
-  padding: '10px',
-  paddingLeft: "20px"
-};
-
-const propertyItemStyle = {
-  display: "flex",
-  justifyContent: "space-between",
-  padding: "10px"
-};
-
-const timelineStyle = {
-  gridArea: 'timeline',
-  border: '1px solid #ccc',
-  display: 'flex',
-  flexDirection: 'column',
-  position: 'relative',
-};
-
-const trackStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  marginBottom: '10px',
-  padding: '10px',
-  border: '1px solid #ccc',
-  overflowX: 'scroll',
-  position: 'relative',
-};
-
-const frameStyle = {
-  width: '80px',
-  height: '45px',
-  marginRight: '5px',
-  cursor: 'pointer',
-};
-
-const verticalLineStyle = {
-  position: 'absolute',
-  top: 0,
-  bottom: 0,
-  width: '2px',
-  backgroundColor: 'red',
-  left: `${(currentTime / duration) * 100}%`,
-  transform: 'translateX(-50%)',
-};
-const VideoButtonStyle = {
-  borderRadius: '100%',
-  padding: "2px 5px",
-  justifyContent: 'center',
-  border: 'none'
-};
-const ButtonStyle = {
-  padding: "2px 5px",
-  justifyContent: 'center',
-  border: 'none',
-  backgroundColor: "#ffffff",
-};
-const iconStyle = {
-  marginTop: '2px'
-};
-const buttonBarStyle = {
-  position: "absolute",
-  display: "flex",
-  gap: "20px",
-  right: '10px'
-};
-const inputStyle = {
-  width: '30px',
-  margin: "5px"
-}
+import SeekBar from './SeekBar';
 
 
 const Videos = () => {
@@ -322,6 +140,189 @@ const Videos = () => {
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', handleMouseUp);
   };
+
+// --------------------------------------Styling---------------------------------------------------------//
+const containerStyle = {
+  display: 'grid',
+  gridTemplateAreas: `
+    "assets editor properties"
+    "timeline timeline timeline"
+  `,
+  gridTemplateColumns: '1fr 2fr 1fr',
+  gridTemplateRows: '1fr auto',
+  height: '100vh',
+};
+
+const assetsStyle = {
+  position: "relative",
+  gridArea: 'assets',
+  borderRight: '1px solid #ccc',
+  padding: '10px',
+  backgroundColor: "#E9EAEC",
+};
+
+const assetItemStyle = {
+  width: "150px",
+  height: "100px",
+  backgroundColor: "gray",
+  overflow: "hidden",
+  height: "auto",
+  border: '1px solid #ccc',
+  borderRadius: '10px',
+  cursor: 'pointer',
+};
+
+const editorStyle = {
+  gridArea: 'editor',
+  display: 'flex',
+  flexDirection: 'column',
+  padding: '10px',
+  background: '#E9EAEC',
+};
+
+const toolbarStyle = {
+  display: 'flex',
+  gap: "10px",
+  justifyContent: 'center',
+  marginTop: "20px"
+};
+
+const iconBar = {
+  width: "100%",
+  position: "absolute",
+  alignItems: 'center',
+  bottom: '0px',
+  right: "0px",
+  backgroundColor: "white",
+  alignItems: "end"
+};
+
+const iconSet = {
+  marginLeft: "60%",
+  padding: "10px",
+  display: 'flex',
+  gap: '15px',
+  backgroundColor: "white"
+};
+
+const icon = {
+  fontSize: '1.5rem',
+  cursor: 'pointer',
+  transition: 'color 0.3s',
+};
+
+
+
+const previewStyle = {
+  flexGrow: 1,
+  border: '1px solid #ccc',
+  display: 'flex',
+  flexDirection: 'column',
+  marginTop: '10px',
+};
+
+const controlsStyle = {
+  gap: '10px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: '10px',
+  border: '1px solid #ccc',
+};
+
+const videoAreaStyle = {
+  flexGrow: 1,
+  position: 'relative',
+  height: "auto"
+};
+
+const videoStyle = {
+  width: '100%',
+  height: '100%',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  background: '#000',
+  transform: `scale(${scale / 100}) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) rotateZ(${rotation.z}deg)`,
+  opacity: opacity / 100,
+  objectFit: 'cover',
+};
+
+const propertiesStyle = {
+  gridArea: 'properties',
+  background: '#E9EAEC',
+  padding: '10px',
+  paddingLeft: "20px"
+};
+
+const propertyItemStyle = {
+  display: "flex",
+  justifyContent: "space-between",
+  padding: "10px"
+};
+
+const timelineStyle = {
+  gridArea: 'timeline',
+  border: '1px solid #ccc',
+  display: 'flex',
+  flexDirection: 'column',
+  position: 'relative',
+};
+
+const trackStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  marginBottom: '10px',
+  padding: '10px',
+  border: '1px solid #ccc',
+  overflowX: 'scroll',
+  position: 'relative',
+};
+
+const frameStyle = {
+  width: '80px',
+  height: '45px',
+  marginRight: '5px',
+  cursor: 'pointer',
+};
+
+const verticalLineStyle = {
+  position: 'absolute',
+  top: 0,
+  bottom: 0,
+  width: '2px',
+  backgroundColor: 'red',
+  left: `${(currentTime / duration) * 100}%`,
+  transform: 'translateX(-50%)',
+};
+const VideoButtonStyle = {
+  borderRadius: '100%',
+  padding: "2px 5px",
+  justifyContent: 'center',
+  border: 'none'
+};
+const ButtonStyle = {
+  padding: "2px 5px",
+  justifyContent: 'center',
+  border: 'none',
+  backgroundColor: "#ffffff",
+};
+const iconStyle = {
+  marginTop: '2px'
+};
+const buttonBarStyle = {
+  position: "absolute",
+  display: "flex",
+  gap: "20px",
+  right: '10px'
+};
+const inputStyle = {
+  width: '30px',
+  margin: "5px"
+}
+
+// .........................................................................................//
 
   return (
     <div style={containerStyle}>
@@ -467,11 +468,12 @@ const Videos = () => {
             <div style={trackStyle}>
               {frames.map((frame, index) => (
                 <div key={index} onClick={() => handleFrameClick(frame.time)}>
-                  {frame.image && <img src={frame.image} alt={`Frame at ${frame.time}s`} style={frameStyle} />}
-                  <p>{`${Math.floor(frame.time / 20)}:${Math.floor(frame.time % 20)}`}</p>
+                  {/* {frame.image && <img src={frame.image} alt={`Frame at ${frame.time}s`} style={frameStyle} />} */}
+                  <SeekBar/>
+                  {/* <p>{`${Math.floor(frame.time / 20)}:${Math.floor(frame.time % 20)}`}</p> */}
                 </div>
               ))}
-              <div className="vertical-line" style={verticalLineStyle}></div>
+              {/* <div className="vertical-line" style={verticalLineStyle}></div> */}
             </div>
           </div>
         </div>

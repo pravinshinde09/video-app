@@ -10,7 +10,7 @@ import BoltOutlinedIcon from '@mui/icons-material/BoltOutlined';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 
 const Home = () => {
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
   const videoRef = useRef(null);
 
 
