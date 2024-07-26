@@ -5,11 +5,12 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
-import { AdsClick, ContentCut, CopyAll, Crop, IosShare, Save, ZoomIn, ZoomOut } from '@mui/icons-material';
+import { AdsClick, ContentCut, CopyAll, Crop, IosShare, Replay, Save, ZoomIn, ZoomOut } from '@mui/icons-material';
 import TouchAppOutlinedIcon from '@mui/icons-material/TouchAppOutlined';
 import { FaPlus } from 'react-icons/fa';
 import { BsGrid3X3 } from 'react-icons/bs';
 import { MdViewList } from 'react-icons/md';
+import { IoReload } from "react-icons/io5";
 
 
 const Videos = () => {
@@ -151,7 +152,7 @@ const Videos = () => {
   };
 
   const assetsStyle = {
-    position:"relative",
+    position: "relative",
     gridArea: 'assets',
     borderRight: '1px solid #ccc',
     padding: '10px',
@@ -159,9 +160,11 @@ const Videos = () => {
   };
 
   const assetItemStyle = {
-    backgroundColor: "black",
     width: "150px",
-    height: "100px",
+    height:"100px",
+    backgroundColor:"gray",
+    overflow:"hidden",
+    height: "auto",
     border: '1px solid #ccc',
     borderRadius: '10px',
     cursor: 'pointer',
@@ -183,33 +186,33 @@ const Videos = () => {
   };
 
   const iconBar = {
-    width:"100%",
-    position:"absolute",
+    width: "100%",
+    position: "absolute",
     alignItems: 'center',
-    bottom:'0px',
-    right:"0px",
-    backgroundColor:"white",
-    alignItems:"end"
+    bottom: '0px',
+    right: "0px",
+    backgroundColor: "white",
+    alignItems: "end"
   };
-  
-  const iconSet =  {
-    marginLeft:"60%",
-    padding:"10px",
+
+  const iconSet = {
+    marginLeft: "60%",
+    padding: "10px",
     display: 'flex',
     gap: '15px',
-    backgroundColor:"white"
+    backgroundColor: "white"
   };
-  
+
   const icon = {
     fontSize: '1.5rem',
     cursor: 'pointer',
     transition: 'color 0.3s',
   };
-  
+
   const iconHover = {
     color: '#0073e', /* Change this color to your desired hover color */
   }
-  
+
 
   const previewStyle = {
     flexGrow: 1,
@@ -255,8 +258,9 @@ const Videos = () => {
   };
 
   const propertyItemStyle = {
-    marginBottom: '10px',
-    marginTop: "20px",
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "10px"
   };
 
   const timelineStyle = {
@@ -314,6 +318,10 @@ const Videos = () => {
     display: "flex",
     gap: "20px",
     right: '10px'
+  };
+  const inputStyle = {
+    width: '30px',
+    margin: "5px"
   }
 
 
@@ -327,20 +335,20 @@ const Videos = () => {
         <div style={{ display: 'flex', gap: '20px' }}>
           <div>
             <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/video.mp4"} >
-              {/* <img src='/images/nature.png' alt='' style={{width:'100%'}} /> */}
+              <img src='/images/nature.png' alt='' style={{width:'100%',height:"110%"}} />
             </div>
             <p>vid-video.mpg</p>
           </div>
           <div>
             <div style={assetItemStyle} onClick={() => videoRef.current.src = "/video/walking.mp4"} >
-              {/* <img src='/images/walking.png' alt=''  /> */}
+              <img src='/images/walking.png' alt=''  style={{width:'100%'}}/>
             </div>
             <p>walking.mp4</p>
           </div>
         </div>
         <div style={iconBar}>
           <div style={iconSet}>
-              <FaPlus style={{...icon, marginRight:"20px"}} /> 
+            <FaPlus style={{ ...icon, marginRight: "20px" }} />
             <BsGrid3X3 style={icon} />
             <MdViewList style={icon} />
           </div>
@@ -370,30 +378,64 @@ const Videos = () => {
       </div>
       <div style={propertiesStyle}>
         <div style={buttonBarStyle}>
-          <button style={{ border: "none", backgroundColor: "gray", display: "flex", borderRadius: '5px'}}><p style={{ color: "white", margin: "5px", paddingTop: "2px"  }}>Dashboard</p></button>
-          <button style={{ border: "none", backgroundColor: "#ffffff", display: "flex",borderRadius: '5px' }}><IosShare /> <p style={{ margin: "5px", paddingTop: "3px"}}>Export</p></button>
+          <button style={{ border: "none", backgroundColor: "gray", display: "flex", borderRadius: '5px' }}><p style={{ color: "white", margin: "5px", paddingTop: "2px" }}>Dashboard</p></button>
+          <button style={{ border: "none", backgroundColor: "#ffffff", display: "flex", borderRadius: '5px' }}><IosShare /> <p style={{ margin: "5px", paddingTop: "3px" }}>Export</p></button>
         </div>
-        <div style={{ ...propertyItemStyle, marginTop: "25%" }}>
-          <label>Scale</label>
-          <input type="range" value={scale} onChange={(e) => setScale(e.target.value)} />
-          <button style={{...ButtonStyle, marginLeft:"40px"}}>{scale} %</button>
-        </div>
-        <div style={propertyItemStyle}>
-          <label >Opacity</label>
-          <input type="range" value={opacity} onChange={(e) => setOpacity(e.target.value)} />
-          <button style={ButtonStyle}>{opacity} %</button>
-        </div>
-        <div style={propertyItemStyle}>
-          <label style={{paddingRight:"10px"}}>Rotation</label>
-          <input style={{width:'30px'}} type="number" value={rotation.x} onChange={(e) => setRotation({ ...rotation, x: e.target.value })} />
-          <input style={{width:'30px'}} type="number" value={rotation.y} onChange={(e) => setRotation({ ...rotation, y: e.target.value })} />
-          <input style={{width:'30px'}} type="number" value={rotation.z} onChange={(e) => setRotation({ ...rotation, z: e.target.value })} />
-        </div>
-        <div style={propertyItemStyle}>
-          <label style={{paddingRight:"10px"}}>Position</label>
-          <input type="number" value={position.x} onChange={(e) => setPosition({ ...position, x: e.target.value })} />
-          <input type="number" value={position.y} onChange={(e) => setPosition({ ...position, y: e.target.value })} />
-          <input type="number" value={position.z} onChange={(e) => setPosition({ ...position, z: e.target.value })} />
+        <div style={{ marginTop: "20%" }}>
+          <div style={propertyItemStyle}>
+            <div style={{ display: "flex" }}>
+              <label>Scale:</label>
+              <input type="range" value={scale} onChange={(e) => setScale(e.target.value)} />
+            </div>
+            <button style={ButtonStyle}>{scale} %</button>
+          </div>
+          <div style={propertyItemStyle}>
+            <div style={{ display: "flex" }}>
+              <label>Opacity:</label>
+              <input type="range" value={opacity} onChange={(e) => setOpacity(e.target.value)} />
+            </div>
+            <button style={ButtonStyle}>{opacity} %</button>
+          </div>
+          <div style={propertyItemStyle}>
+            <p style={{ paddingRight: "10px" }}>Rotation:</p>
+            <div style={{ display: "grid" }}>
+              <div>
+                <IoReload style={{ marginRight: "20px" }} />
+                <label>X</label>
+                <input style={inputStyle} type="number" value={rotation.x} onChange={(e) => setRotation({ ...rotation, x: e.target.value })} />
+              </div>
+              <div>
+                <IoReload style={{ marginRight: "20px" }} />
+                <label>Y</label>
+                <input style={inputStyle} type="number" value={rotation.y} onChange={(e) => setRotation({ ...rotation, y: e.target.value })} />
+              </div>
+              <div>
+                <IoReload style={{ marginRight: "20px" }} />
+                <label>Z</label>
+                <input style={inputStyle} type="number" value={rotation.z} onChange={(e) => setRotation({ ...rotation, z: e.target.value })} />
+              </div>
+            </div>
+          </div>
+          <div style={propertyItemStyle}>
+            <p style={{ paddingRight: "10px" }}>Position:</p>
+            <div style={{ display: "grid" }}>
+              <div>
+                <IoReload style={{ marginRight: "20px" }} />
+                <label>X</label>
+                <input style={inputStyle} type="number" value={position.x} onChange={(e) => setPosition({ ...position, x: e.target.value })} />
+              </div>
+              <div>
+                <IoReload style={{ marginRight: "20px" }} />
+                <label>Y</label>
+                <input style={inputStyle} type="number" value={position.y} onChange={(e) => setPosition({ ...position, y: e.target.value })} />
+              </div>
+              <div>
+                <IoReload style={{ marginRight: "20px" }} />
+                <label>Z</label>
+                <input style={inputStyle} type="number" value={position.z} onChange={(e) => setPosition({ ...position, z: e.target.value })} />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -406,7 +448,7 @@ const Videos = () => {
             isPlaying ? <PauseIcon style={iconStyle} /> : <PlayArrowIcon style={iconStyle} />
           }</button>
           <button onClick={() => videoRef.current.currentTime += 5} style={VideoButtonStyle}><SkipNextIcon style={iconStyle} /></button>
-          <input style={{color:'orange'}} type='range' value={(currentTime / duration) * 100} onChange={handleSeek} />
+          <input style={{ color: 'orange' }} type='range' value={(currentTime / duration) * 100} onChange={handleSeek} />
           <span>{`${Math.floor(currentTime / 60)}:${Math.floor(currentTime % 60)}`} / {`${Math.floor(duration / 60)}:${Math.floor(duration % 60)}`}</span>
         </div>
         <div style={{ padding: '10px' }}>
